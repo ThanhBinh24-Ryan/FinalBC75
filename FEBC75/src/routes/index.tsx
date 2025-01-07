@@ -1,5 +1,5 @@
 import HomeTemplate from "../pages/HomeTemplate";
-import HomePage from "../pages/HomeTemplate";
+import HomePage from "../pages/HomeTemplate/HomePage/index";
 import { Route } from "react-router-dom";
 
 type TRoute = {

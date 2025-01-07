@@ -5,7 +5,7 @@ type ConfigType = {
 };
 
 const api = axios.create({
-  baseURL: "https://movienew.cybersoft.edu.vn/api/",
+  baseURL: "https://fiverrnew.cybersoft.edu.vn/api/",
 });
 
 api.interceptors.request.use((config: ConfigType) => {

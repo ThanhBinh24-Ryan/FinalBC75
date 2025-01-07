@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-
+import  listJobReducer from "./../pages/HomeTemplate/HomePage/slide";
 const store = configureStore({
     reducer: {
       // Add reducers here
-   
+      listJobReducer,
     },
   });
   

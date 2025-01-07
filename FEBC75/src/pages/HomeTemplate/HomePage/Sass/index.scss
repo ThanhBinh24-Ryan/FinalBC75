@@ -1,0 +1,126 @@
+.hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+// /* iPhone 6-7-8 */
+// @media only screen and (max-width: 375px) {
+//   .flex-col {
+//     margin-left: 10px;
+//     margin-top: 10px;
+//     margin-bottom: 10px;
+//   }
+//   .text-3xl {
+//     font-size: 1.5rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+// /* iPhone 6-7-8 Plus */
+// @media only screen and (max-width: 414px) {
+//   .flex-col {
+//     margin-left: 20px;
+//     margin-top: 15px;
+//     margin-bottom: 15px;
+//   }
+//   .text-3xl {
+//     font-size: 1.75rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+// /* iPad */
+// @media only screen and (max-width: 768px) {
+//   .flex-col {
+//     margin-left: 30px;
+//     margin-top: 20px;
+//     margin-bottom: 20px;
+//   }
+//   .text-3xl {
+//     font-size: 2rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+// /* Desktop 1200 trở lên */
+// @media only screen and (min-width: 1200px) {
+//   .flex-col {
+//     margin-left: 44px;
+//     margin-top: 20px;
+//     margin-bottom: 12px;
+//   }
+//   .text-3xl {
+//     font-size: 3rem;
+//   }
+//   .w-96 {
+//     width: 24rem;
+//   }
+// }
+// /* iPhone 6-7-8 */
+// @media only screen and (max-width: 375px) {
+//   .flex-col {
+//     margin-left: 10px;
+//     margin-top: 10px;
+//     margin-bottom: 10px;
+//   }
+//   .text-3xl {
+//     font-size: 1.5rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+/* iPhone 6-7-8 Plus */
+// @media only screen and (max-width: 414px) {
+//   .flex-col {
+//     margin-left: 20px;
+//     margin-top: 15px;
+//     margin-bottom: 15px;
+//   }
+//   .text-3xl {
+//     font-size: 1rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+// /* iPad */
+// @media only screen and (max-width: 768px) {
+//   .flex-col {
+//     margin-left: 30px;
+//     margin-top: 20px;
+//     margin-bottom: 20px;
+//   }
+//   .text-3xl {
+//     font-size: 2rem;
+//   }
+//   .w-96 {
+//     width: 100%;
+//   }
+// }
+
+// /* Desktop 1200 trở lên */
+// @media only screen and (min-width: 1200px) {
+//   .flex-col {
+//     margin-left: 44px;
+//     margin-top: 20px;
+//     margin-bottom: 12px;
+//   }
+//   .text-3xl {
+//     font-size: 2rem;
+//   }
+//   .w-96 {
+//     width: 24rem;
+//   }
+// }
