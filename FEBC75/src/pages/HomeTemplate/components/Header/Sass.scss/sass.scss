@@ -1,0 +1,43 @@
+@media (max-width: 768px) {
+    .job-search-container {
+      flex-grow: 1; /* Đảm bảo ô tìm kiếm mở rộng tối đa */
+    }
+  
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+  
+    .job-search-container form {
+      width: 100%; /* Đảm bảo ô tìm kiếm chiếm 100% chiều ngang */
+    }
+  
+    // .job-search-container button {
+    //   width: 100%; /* Nút tìm kiếm sẽ xuống dòng ở màn hình nhỏ */
+    //   margin-top: 8px; /* Tạo khoảng cách giữa ô input và nút */
+    // }
+  
+    .flex.items-center.space-x-3 {
+      justify-content: left; /* Căn giữa phần "Right section" */
+      flex-wrap: wrap;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .job-search-container input {
+      font-size: 14px; /* Giảm kích thước font */
+    }
+  
+    .job-search-container button {
+      font-size: 14px; /* Giảm kích thước font */
+    }
+  
+    .flex.items-center.space-x-3 a {
+      font-size: 12px; /* Giảm kích thước chữ của link */
+    }
+  
+    .flex.items-center.space-x-3 button {
+      font-size: 12px; /* Giảm kích thước chữ của nút */
+      padding: 6px 12px;
+    }
+  }
+  
