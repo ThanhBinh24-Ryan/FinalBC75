@@ -1,23 +1,38 @@
-import HomeTemplate from "../pages/HomeTemplate";
-import HomePage from "../pages/HomeTemplate/HomePage/index";
 import { Route } from "react-router-dom";
+import HomeTemplate from "../pages/HomeTemplate";
+import HomePage from "../pages/HomeTemplate/HomePage";
+import Login from "../pages/Auth/Login";
+import Register from "../pages/Auth/Register";
+import AdminPage from "../pages/Admin";
 
 type TRoute = {
   path: string;
-  element: () => React.ReactNode;
+  Component: React.ComponentType;
   children?: TRoute[];
 };
 
 const routes: TRoute[] = [
   {
     path: "",
-    element: HomeTemplate,
+    Component: HomeTemplate,
     children: [
       {
         path: "",
-        element: HomePage,
+        Component: HomePage,
       },
     ],
+  },
+  {
+    path: "login",
+    Component: Login,
+  },
+  {
+    path: "register",
+    Component: Register,
+  },
+  {
+    path: "admin",
+    Component: AdminPage,
   },
 ];
 
@@ -25,19 +40,23 @@ const renderRoutes = () => {
   return routes.map((route) => {
     if (route.children) {
       return (
-        <Route key={route.path} path={route.path} element={<route.element />}>
-          {route.children.map((item) => (
+        <Route key={route.path} path={route.path} element={<route.Component />}>
+          {route.children.map((child) => (
             <Route
-              key={item.path}
-              path={item.path}
-              element={<item.element />}
+              key={child.path}
+              path={child.path}
+              element={<child.Component />}
             />
           ))}
         </Route>
       );
     } else {
       return (
-        <Route key={route.path} path={route.path} element={<route.element />} />
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<route.Component />}
+        />
       );
     }
   });
