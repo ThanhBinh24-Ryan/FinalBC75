@@ -1,9 +1,9 @@
 import "./Sass/index.scss";
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchListJob } from "./slide";
+import { fetchListJob } from "../components/Header/slide";
 import { AppDispatch, RootState } from "./../../../store";
-import  {Job}  from "./slide";
+import  {Job}  from "../components/Header/slide";
 import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ export default function HomePage() {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate(); // Hook điều hướng
 
-  const { loading, data } = useSelector((state: RootState) => state.listJobReducer);
+  const {  data } = useSelector((state: RootState) => state.listJobReducer);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
@@ -53,28 +53,15 @@ export default function HomePage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!searchTerm.trim()) {
+      // Hiển thị thông báo nếu ô tìm kiếm rỗng
+      alert("Vui lòng nhập từ khóa để tìm kiếm!");
+      return; // Ngăn điều hướng nếu input trống
+    }
     navigate(`/list-job?search=${searchTerm}`); // Điều hướng sang trang khác
   };
 
-// Hiển thị danh sách công việc
-const renderJobs = () => {
-  if (loading) {
-    return <p>Đang tải...</p>;
-  }
 
-
-  if (data && data.length > 0) {
-    console.log("Redux Data:", data); 
-    return data.map((job) => (
-      <div key={job.id} className="job-card border p-1 w-1/2 bg-slate-200 hover:bg-slate-600 hover:text-white rounded-md shadow-md mb-1">
-        <h3 className="text-lg font-semibold mt-2">{job.congViec.tenCongViec}</h3>
-      </div>
-    ));
-  }
-  return <p className="text-gray-500">Không tìm thấy công việc nào.</p>;
-};
-
-// Cập nhật giá trị từ API vào input khi có dữ liệu
 useEffect(() => {
   if (data && data.length > 0) {
     console.log("Redux Data:", data); // Kiểm tra Redux state
@@ -84,16 +71,16 @@ useEffect(() => {
 
   return (
     <>
-    <nav className="bg-white border-gray-200 dark:bg-gray-900"  
+    <nav className="bg-white border-gray-200 dark:bg-gray-900 object-cover"  
     style={{
-      backgroundImage: `url("/public/images.jpg")`,
+      backgroundImage: `url("../../../../public/img/00. Pics/5.png")`, backgroundSize: "cover", backgroundPosition: "center"
     }}
     >
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="max-w-screen-xl flex  items-center justify-between mx-auto p-4">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
         
-          <span className="desktop:pl-14 self-center text-3xl font-bold whitespace-nowrap text-white ">
+          <span className="desktop:pl-14 iphone:text-xl iphoneplus:text-xl self-center text-3xl font-bold whitespace-nowrap text-white ">
             Fiverr
           </span>
         </a>
@@ -101,27 +88,32 @@ useEffect(() => {
  
 
         {/* Right section */}
-        <div className="flex items-center space-x-4 font-bold mr-9">
+        <div className="flex items-center space-x-3   font-bold ">
           <a
             href="/"
-            className="text-gray-700 hover:text-blue-700 font-medium dark:text-white"
+            className="text-gray-50 iphone:text-sm iphoneplus:text-sm hover:text-blue-700 font-bold dark:text-white"
           >
             Become a Seller
           </a>
           <a
             href="/"
-            className="text-gray-700 hover:text-blue-700 font-medium dark:text-white"
+            className="text-gray-50 iphone:text-sm iphoneplus:text-sm font-bold hover:text-blue-700  dark:text-white"
           >
             Sign In
           </a>
-          <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <button className="border-2 iphone:text-sm iphoneplus:text-sm border-gray-50 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
             Join
           </button>
         </div>
       </div>
+      
+
+
+
+
       <div className="flex flex-col mt-20 mb-12">
 
-      <div className="mb-6  iphone:px-4 iphoneplus:text-center ipad:text-left  desktop:px-32 ">
+      <div className="mb-6 pl-4  iphone:text-center iphoneplus:pl-8 ipad:pl-10   desktop:px-32 ">
   <h1 className="text-2xl iphone:text-xl iphoneplus:text-2xl ipad:text-3xl desktop:text-4xl font-bold text-white">
     Find the perfect <span className="italic">freelance</span> <br />
     services for your business
@@ -130,27 +122,33 @@ useEffect(() => {
 
 
 
-<div className="job-search-container pt-1 desktop:px-32">
-  <form onSubmit={handleSearch} className="flex items-center mb-2 relative">
+<div className="job-search-container pt-1 desktop:px-32 px-4   ">
+  <form onSubmit={handleSearch} className="flex items-center mb-2 relative ">
     {/* Ô tìm kiếm */}
     <input
       type="text"
       value={searchTerm}
       onChange={handleInputChange}
       placeholder='Try "building mobile app"'
-      className="border border-gray-300 rounded-lg py-2 px-4 w-80 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="border border-gray-300 rounded-lg py-2 px-4  sm:w-70 md:w-80 focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
 
     {/* Nút tìm kiếm */}
     <button
-      type="submit"
-      className="ml-1 bg-green-500 text-white px-4 py-2 rounded-lg iphone:py-1 iphone:px-2 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-    >
-      Tìm kiếm
-    </button>
+     disabled={!searchTerm.trim()}
+  type="submit"
+  className={`ml-1 px-4 py-2 rounded-lg flex items-center justify-center ${
+    searchTerm.trim()
+      ? "bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+>
+  <span className="hidden sm:inline">Search</span>
+  <span className="sm:hidden">Search</span>
+</button>
 
-    {/* Danh sách gợi ý */}
-    {/* Danh sách gợi ý */}
+
+   
     {filteredJobs.length > 0 && (
       <div className="absolute bg-white border border-gray-700 top-10 rounded-lg shadow-lg mt-1 w-96 z-10 max-h-60 overflow-y-auto">
         {filteredJobs.slice(0, 10).map((job) => (
@@ -166,13 +164,13 @@ useEffect(() => {
     )}
   </form>
 
-  {loading && <p>Đang tải...</p>}
+
 </div>
 
 
 
 
-  <div className="mt-2 flex items-center space-x-2 desktop:pl-32" style={{ width: "600px" }}>
+  <div className="mt-2 flex items-center space-x-2 desktop:pl-32 " style={{ width: "600px" }}>
   <p className="text-white text-xs font-medium">Popular:</p>
 
   <button className="text-white text-xs border border-white py-1 px-1 rounded-full hover:bg-gray-200 hover:text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300">
@@ -191,7 +189,7 @@ useEffect(() => {
 
 
 </div>
-<div className="flex flex-col  items-end mr-40 text-white space-y-1">
+<div className="flex flex-col iphone:text-center justify-items-end  items-end mr-20 text-white space-y-1">
   {/* Ngôi sao */}
   <div className="flex space-x-1 mr-14">
     <span className="text-yellow-400">★</span>
@@ -207,16 +205,16 @@ useEffect(() => {
 
     </nav>
     <div className="bg-gray-100 py-4 text-center  text-3xl">
-  <div className="max-w-screen-lg mx-auto flex items-center space-x-6 justify-center">
+  <div className=" iphone:space-x-2 iphoneplus:space-x-2 mx-auto flex items-center space-x-5 ipad:text-xl justify-center">
     {/* Trusted by text */}
-    <p className="text-gray-500  opacity-70 text-sm font-semibold ">Trusted by:</p>
+    <p className="text-gray-500 iphone:text-sm iphoneplus:text-sm opacity-70 text-sm font-semibold ">Trusted by:</p>
 
     {/* Logo names as links */}
     <a
       href="https://www.facebook.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 text-lg font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
+      className="text-gray-400 text-lg font-semibold iphone:text-sm iphoneplus:text-sm  opacity-70 hover:opacity-100 hover:text-gray-600"
     >
       Facebook
     </a>
@@ -224,7 +222,7 @@ useEffect(() => {
       href="https://www.google.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 text-lg font-semibold opacity-80 hover:opacity-100 hover:text-gray-600"
+      className="text-gray-400 text-lg iphone:text-sm iphoneplus:text-sm font-semibold opacity-80 hover:opacity-100 hover:text-gray-600"
     >
       Google
     </a>
@@ -232,7 +230,7 @@ useEffect(() => {
       href="https://www.netflix.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 text-lg  font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
+      className="text-gray-400 text-lg iphone:text-sm iphoneplus:text-sm  font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
   >
       Netflix
     </a>
@@ -240,7 +238,7 @@ useEffect(() => {
       href="https://us.pg.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 text-lg italic font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
+      className="text-gray-400 text-lg iphone:text-sm iphoneplus:text-sm italic font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
     >
       P&amp;G
     </a>
@@ -248,13 +246,13 @@ useEffect(() => {
       href="https://www.paypal.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 text-lg italic font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
+      className="text-gray-400 text-lg iphone:text-sm iphoneplus:text-sm italic font-semibold opacity-70 hover:opacity-100 hover:text-gray-600"
     >
       PayPal
     </a>
   </div>
 </div>
-<div className="bg-white py-10 px-6 container relative  ">
+<div className="bg-white py-10 container mx-auto  relative  ">
       {/* Title */}
       <h2 className="text-2xl font-bold text-gray-800 mb-6 ">
         Popular professional services
@@ -271,7 +269,7 @@ useEffect(() => {
         {/* Card 1 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="https://via.placeholder.com/300x200"
+            src="../../../../public/img/00. Pics/crs6.png"
             alt="Logo Design"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -284,7 +282,7 @@ useEffect(() => {
         {/* Card 2 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="https://via.placeholder.com/300x200"
+            src="../../../../public/img/00. Pics/crs8.png"
             alt="WordPress"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -297,7 +295,7 @@ useEffect(() => {
         {/* Card 3 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="https://via.placeholder.com/300x200"
+            src="../../../../public/img/00. Pics/crs9.png"
             alt="Voice Over"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -310,7 +308,7 @@ useEffect(() => {
         {/* Card 4 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="https://via.placeholder.com/300x200"
+            src="../../../../public/img/00. Pics/crs10.png"
             alt="Video Explainer"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -323,7 +321,7 @@ useEffect(() => {
         {/* Card 5 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="https://via.placeholder.com/300x200"
+            src="../../../../public/img/00. Pics/crs7.png"
             alt="Social Media"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -336,7 +334,7 @@ useEffect(() => {
 
   
       <button
-        className="absolute left-4 px-4 py-2 top-48 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full shadow-md p-2 hover:bg-gray-100"
+        className="absolute left-0 px-4 py-2 top-44 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full shadow-md p-2 hover:bg-gray-100"
         onClick={() => handleScroll("left")}
       >
         <span className="text-gray-600">{`<`}</span>
@@ -344,7 +342,7 @@ useEffect(() => {
 
       {/* Right Arrow */}
       <button
-        className="absolute right-4 top-48 transform px-4 py-2 -translate-y-1/2 bg-white border border-gray-300 rounded-full shadow-md p-2 hover:bg-gray-100"
+        className="absolute right-0 top-44 transform px-4 py-2 -translate-y-1/2 bg-white border border-gray-300 rounded-full shadow-md p-2 hover:bg-gray-100"
         onClick={() => handleScroll("right")}
       >
         <span className="text-gray-600">{`>`}</span>
@@ -404,7 +402,7 @@ useEffect(() => {
      
         <div className="w-full">
     <video className="w-full" controls>
-  <source src="/docs/videos/flowbite.mp4" type="video/mp4" />
+  <source src="../../../../public/video1.mp4" type="video/mp4" />
   Your browser does not support the video tag.
 </video>
 
@@ -419,7 +417,7 @@ useEffect(() => {
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative w-72 h-48 md:w-96 md:h-64">
           <video className="w-full" controls>
-          <source src="/docs/videos/flowbite.mp4" type="video/mp4" />
+          <source src="../../../../public/video2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
           </div>

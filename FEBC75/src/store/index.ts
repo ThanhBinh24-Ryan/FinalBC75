@@ -1,9 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import  listJobReducer from "./../pages/HomeTemplate/HomePage/slide";
+import  listJobReducer from "../pages/HomeTemplate/components/Header/slide";
+import listMenuReducer from "../pages/HomeTemplate/components/Menu/slide";
+import detailJobReducer from "../pages/HomeTemplate/Detail-Job/slide";
+import listCommentsReducer from "../pages/HomeTemplate/Detail-Job/slide-comments";
 const store = configureStore({
     reducer: {
       // Add reducers here
       listJobReducer,
+      listMenuReducer,
+      detailJobReducer,
+      listCommentsReducer,
     },
   });
   

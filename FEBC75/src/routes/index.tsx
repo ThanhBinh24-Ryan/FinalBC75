@@ -1,7 +1,8 @@
 import HomeTemplate from "../pages/HomeTemplate";
 import HomePage from "../pages/HomeTemplate/HomePage/index";
 import { Route } from "react-router-dom";
-
+import ListJob from "../pages/HomeTemplate/list-job";
+import DetailJob from "../pages/HomeTemplate/Detail-Job";
 type TRoute = {
   path: string;
   element: () => React.ReactNode;
@@ -16,6 +17,14 @@ const routes: TRoute[] = [
       {
         path: "",
         element: HomePage,
+      },
+      {
+        path: "list-job",
+        element: ListJob,
+      },
+      {
+        path: "Detail-Job/:id",
+        element: DetailJob,
       },
     ],
   },
