@@ -1,15 +1,14 @@
 import { Route } from "react-router-dom";
-<<<<<<< HEAD
+
 import ListJob from "../pages/HomeTemplate/list-job";
 import DetailJob from "../pages/HomeTemplate/Detail-Job";
-=======
+import DetailType from "../pages/HomeTemplate/detailType";
 import HomeTemplate from "../pages/HomeTemplate";
 import HomePage from "../pages/HomeTemplate/HomePage";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import AdminPage from "../pages/Admin";
-
->>>>>>> b94ff17031f3b0b7337281d38c4a0fcc888f5985
+import ProfileUser from "../pages/HomeTemplate/profile";
 type TRoute = {
   path: string;
   Component: React.ComponentType;
@@ -18,7 +17,7 @@ type TRoute = {
 
 const routes: TRoute[] = [
   {
-    path: "",
+    path: "/*",
     Component: HomeTemplate,
     children: [
       {
@@ -27,11 +26,19 @@ const routes: TRoute[] = [
       },
       {
         path: "list-job",
-        element: ListJob,
+        Component: ListJob,
       },
       {
         path: "Detail-Job/:id",
-        element: DetailJob,
+        Component: DetailJob,
+      },
+      {
+        path: "detailType/:id",
+        Component: DetailType,
+      },
+      {
+        path: "profile/:id",
+        Component: ProfileUser,
       },
     ],
   },
@@ -47,6 +54,7 @@ const routes: TRoute[] = [
     path: "admin",
     Component: AdminPage,
   },
+ 
 ];
 
 const renderRoutes = () => {

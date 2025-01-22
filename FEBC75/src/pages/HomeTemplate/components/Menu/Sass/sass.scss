@@ -58,4 +58,108 @@
       font-size: 12px; /* Kích thước font nhỏ hơn */
     }
   }
-  
+  /* Container Styles */
+.menu-bar {
+  position: relative;
+  background-color: #f9f9f9;
+  padding: 10px 20px;
+ 
+
+  z-index: 10;
+}
+
+// /* Menu List */
+// .menu-list {
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: space-between;
+//   list-style: none;
+//   margin: 0;
+//   padding: 0;
+// }
+
+.menu-item {
+  position: relative;
+ 
+  cursor: pointer;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: #e3e3e3;
+  border-radius: 5px;
+}
+
+.submenu-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+
+  z-index: 1000;
+  min-width: 250px;
+  padding: 10px;
+}
+
+/* Display submenu when the menu is active */
+.menu-item:hover .submenu-list {
+  display: block;
+}
+
+/* Submenu Items */
+.submenu-item {
+  margin-bottom: 10px;
+}
+
+.submenu-item:last-child {
+  margin-bottom: 0;
+}
+
+.submenu-item strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-list {
+
+  list-style: none;
+  margin: 5px 0 0 15px;
+  padding: 0;
+}
+
+.detail-item {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.detail-item:hover {
+  color: #351992;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .menu-bar {
+    padding: 10px;
+  }
+
+  .menu-list {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu-item {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .submenu-list {
+    position: static;
+    box-shadow: none;
+    border: none;
+    margin-top: 10px;
+  }
+}
