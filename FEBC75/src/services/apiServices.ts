@@ -9,12 +9,21 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config: ConfigType) => {
+  // Lấy userData từ localStorage
+  const userData = localStorage.getItem("userData");
   let accessToken = "";
-  const userAdmin = localStorage.getItem("USER_ADMIN");
-  if (userAdmin) {
-    accessToken = JSON.parse(userAdmin).accessToken;
+
+  if (userData) {
+    try {
+      const parsedUserData = JSON.parse(userData); // Phân tích JSON
+      accessToken = parsedUserData.token; // Lấy token từ userData
+      console.log("Token từ localStorage:", accessToken);
+    } catch (error) {
+      console.error("Lỗi phân tích userData từ localStorage:", error);
+    }
   }
 
+  // Thêm token vào headers
   config.headers = {
     ...config.headers,
     Authorization: `Bearer ${accessToken}`,
@@ -24,5 +33,6 @@ api.interceptors.request.use((config: ConfigType) => {
 
   return config;
 });
+
 
 export default api;

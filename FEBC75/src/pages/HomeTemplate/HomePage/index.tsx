@@ -95,15 +95,18 @@ useEffect(() => {
           >
             Become a Seller
           </a>
-          <a
-            href="/"
-            className="text-gray-50 iphone:text-sm iphoneplus:text-sm font-bold hover:text-blue-700  dark:text-white"
-          >
-            Sign In
-          </a>
-          <button className="border-2 iphone:text-sm iphoneplus:text-sm border-gray-50 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
-            Join
-          </button>
+          <button
+              onClick={() => navigate("/login")} // Navigate đến trang login
+              className="text-gray-50 text-sm font-bold hover:text-blue-700 dark:text-white"
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => navigate("/register")} // Navigate đến trang register
+              className="border-2 text-sm border-gray-50 text-gray-50 px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              Join
+            </button>
         </div>
       </div>
       
