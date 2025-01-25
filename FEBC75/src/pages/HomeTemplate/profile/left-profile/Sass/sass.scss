@@ -1,0 +1,92 @@
+.profile-container {
+    font-family: Arial, sans-serif;
+  
+    .profile-header {
+      .avatar {
+        background-color: #e5e7eb;
+      }
+  
+      h2 {
+        margin-top: 0.5rem;
+        font-weight: bold;
+      }
+  
+      span {
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: #10b981; // Màu xanh Online
+      }
+    }
+  
+    .profile-info {
+      border: 1px solid #e5e7eb;
+      padding-top: 1rem;
+  
+      p {
+        display: flex;
+        align-items: center;
+  
+        .material-icons {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  
+    .profile-section {
+      h3 {
+        font-weight: bold;
+      }
+  
+      button {
+        color: #3b82f6;
+        font-size: 0.875rem;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+  
+      p {
+        margin-top: 0.5rem;
+        color: #6b7280;
+      }
+    }
+  }
+  .profile-container,
+.profile-details {
+  font-family: Arial, sans-serif;
+
+  .profile-header {
+    .avatar {
+      background-color: #e5e7eb;
+    }
+    h2 {
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+    span {
+      color: #10b981; // Màu xanh cho trạng thái Online
+    }
+  }
+
+  .profile-section {
+    margin-top: 1.5rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    button {
+      color: #3b82f6;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      margin-top: 0.5rem;
+      color: #6b7280;
+    }
+  }
+}

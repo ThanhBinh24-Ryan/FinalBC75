@@ -8,7 +8,8 @@ import HomePage from "../pages/HomeTemplate/HomePage";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import AdminPage from "../pages/Admin";
-import ProfileUser from "../pages/HomeTemplate/profile";
+import ProfileUser from "../pages/HomeTemplate/profile/index";
+import EditProfile from "../pages/HomeTemplate/edit-Profile/index";
 type TRoute = {
   path: string;
   Component: React.ComponentType;
@@ -39,6 +40,10 @@ const routes: TRoute[] = [
       {
         path: "profile/:id",
         Component: ProfileUser,
+      },
+      {
+        path: "editProfile/:id",
+        Component: EditProfile,
       },
     ],
   },

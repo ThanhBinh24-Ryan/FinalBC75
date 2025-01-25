@@ -9,81 +9,72 @@ const PostJobForm: React.FC = () => {
   const navigate = useNavigate();
 
   // Local state for form inputs
-  const [maCongViec, setMaCongViec] = useState("");
-  const [ngayThue, setNgayThue] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [maCongViec, setMaCongViec] = useState(""); // Mã công việc từ URL
+  const [ngayThue, setNgayThue] = useState(""); // Ngày thuê mặc định
+  const [showMessage, setShowMessage] = useState(false); // Hiển thị thông báo
+  const [message, setMessage] = useState(""); // Nội dung thông báo
+  const [isSuccess, setIsSuccess] = useState(false); // Trạng thái thành công
 
   const { loading } = useSelector((state: RootState) => state.listThueReducer);
 
-  // Extract maCongViec from URL and set default ngayThue
+  // Lấy mã công việc từ URL và thiết lập ngày thuê mặc định
   useEffect(() => {
-    const url = window.location.href;
-    const jobId = url.split("/").pop();
+    const jobId = window.location.pathname.split("/").pop(); // Lấy mã công việc từ URL
     if (jobId) setMaCongViec(jobId);
 
-    const currentDate = new Date().toISOString().split("T")[0];
+    const currentDate = new Date().toISOString().split("T")[0]; // Ngày hiện tại
     setNgayThue(currentDate);
   }, []);
 
-  // Check authentication and fetch user ID
-  const checkAuthentication = (): { userId: number | null; token: string | null } => {
+  // Kiểm tra xác thực người dùng
+  const getUserData = () => {
     const userData = localStorage.getItem("userData");
-
     if (!userData) {
       setMessage("Bạn chưa đăng nhập. Vui lòng đăng nhập để tiếp tục.");
       setIsSuccess(false);
       setShowMessage(true);
       navigate("/login");
-      return { userId: null, token: null };
+      return null;
     }
 
     try {
       const parsedUserData = JSON.parse(userData);
-
-      if (!parsedUserData.user || !parsedUserData.user.id || !parsedUserData.token) {
+      if (!parsedUserData.user?.id || !parsedUserData.token) {
         throw new Error("Dữ liệu người dùng không hợp lệ.");
       }
-
       return { userId: parsedUserData.user.id, token: parsedUserData.token };
-    } catch (err) {
-      console.error("Lỗi khi phân tích dữ liệu người dùng:", err);
+    } catch (error) {
+      console.error("Lỗi phân tích userData:", error);
       setMessage("Lỗi xác thực. Vui lòng đăng nhập lại.");
       setIsSuccess(false);
       setShowMessage(true);
       navigate("/login");
-  
-      return { userId: null, token: null };
-     
+      return null;
     }
   };
 
+  // Xử lý gửi biểu mẫu
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const { userId, token } = checkAuthentication();
-    if (!userId || !token) return;
+    const userData = getUserData();
+    if (!userData) return;
 
     const data = {
       maCongViec: Number(maCongViec),
-      maNguoiThue: userId,
+      maNguoiThue: userData.userId,
       ngayThue: new Date(ngayThue),
-      hoanThanh: true, // Default value
+      hoanThanh: true,
     };
-    console.log("Data to post:", data);
-    const to = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc3MjQiLCJlbWFpbCI6InRAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJuYmYiOjE3Mzc1NjA0NjEsImV4cCI6MTczODE2NTI2MX0.wC2q1uKYJP_vnkd62YW1VJBVwwMDb2MDpcQPPRO29hc";
-    const headers = {
-      Authorization: `Bearer ${to}`,
-    };
-    console.log("Data to post:", data);
+
+    console.log("Data to send:", data);
+
     try {
-      await dispatch(fetListThue({ data, headers }));
+      await dispatch(fetListThue(data)).unwrap(); // Gọi API thuê công việc
       setMessage("Công việc đã được đăng thành công!");
       setIsSuccess(true);
     } catch (err: any) {
       console.error("Lỗi xảy ra:", err);
-      setMessage(`Đăng công việc thất bại. Chi tiết lỗi: ${err.message || "Không xác định."}`);
+      setMessage(err?.message || "Đăng công việc thất bại. Vui lòng thử lại.");
       setIsSuccess(false);
     } finally {
       setShowMessage(true);
@@ -92,15 +83,29 @@ const PostJobForm: React.FC = () => {
 
   return (
     <div className="package-container" style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-    
-
-      <div className="package-header" style={{ display: "flex", justifyContent: "space-around", borderBottom: "2px solid #ccc", paddingBottom: "10px" }}>
+      <div
+        className="package-header"
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          borderBottom: "2px solid #ccc",
+          paddingBottom: "10px",
+        }}
+      >
         <div>Basic</div>
         <div style={{ fontWeight: "bold", color: "green" }}>Standard</div>
         <div>Premium</div>
       </div>
 
-      <div className="package-details" style={{ border: "1px solid #ccc", padding: "20px", borderRadius: "5px", marginTop: "20px" }}>
+      <div
+        className="package-details"
+        style={{
+          border: "1px solid #ccc",
+          padding: "20px",
+          borderRadius: "5px",
+          marginTop: "20px",
+        }}
+      >
         <h3>Standard</h3>
         <p style={{ fontSize: "14px", color: "#555" }}>Create a simple web application for your business.</p>
         <ul style={{ listStyle: "none", padding: 0, fontSize: "14px", color: "#333" }}>
@@ -125,23 +130,24 @@ const PostJobForm: React.FC = () => {
             width: "100%",
           }}
           onClick={handleSubmit}
+          disabled={loading}
         >
-          {loading ? "Loading..." : "Continue with $1000"}
+          {loading ? "Đang xử lý..." : "Continue with $1000"}
         </button>
         {showMessage && (
-        <div
-          style={{
-            padding: "20px",
-            marginBottom: "20px",
-            backgroundColor: isSuccess ? "#d4edda" : "#f8d7da",
-            color: isSuccess ? "#155724" : "#721c24",
-            border: `1px solid ${isSuccess ? "#c3e6cb" : "#f5c6cb"}`,
-            borderRadius: "5px",
-          }}
-        >
-          {message}
-        </div>
-      )}
+          <div
+            style={{
+              padding: "20px",
+              marginBottom: "20px",
+              backgroundColor: isSuccess ? "#d4edda" : "#f8d7da",
+              color: isSuccess ? "#155724" : "#721c24",
+              border: `1px solid ${isSuccess ? "#c3e6cb" : "#f5c6cb"}`,
+              borderRadius: "5px",
+            }}
+          >
+            {message}
+          </div>
+        )}
       </div>
 
       <div className="quote-container" style={{ marginTop: "20px", textAlign: "center" }}>
