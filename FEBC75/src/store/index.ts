@@ -6,8 +6,11 @@ import listCommentsReducer from "../pages/HomeTemplate/Detail-Job/slide-comments
 import detailMenuReducer from "../pages/HomeTemplate/components/Menu/slide-detail";
 import listForIDReducer from "../pages/HomeTemplate/detailType/slide";
 import loginReducer from "../pages/Auth/Login/slide";
-import addCommentsReducer from "../pages/HomeTemplate/Detail-Job/slide-comments";
+import addCommentsReducer from "../pages/HomeTemplate/Detail-Job/slide-Usercoment";
 import listThueReducer from "../pages/HomeTemplate/Detail-Job/slide-thue";
+import fetchProfileLeft from "../pages/HomeTemplate/profile/left-profile/slide-left";
+import editProfileReducer from "../pages/HomeTemplate/edit-Profile/slide";
+import profileRightProfile from "../pages/HomeTemplate/profile/right-Profile/slide";
 const store = configureStore({
     reducer: {
       // Add reducers here
@@ -20,6 +23,9 @@ const store = configureStore({
       loginReducer,
       addCommentsReducer,
       listThueReducer,
+      fetchProfileLeft,
+      editProfileReducer,
+      profileRightProfile,
     },
   });
   

@@ -26,8 +26,7 @@ export const fetchLogin = createAsyncThunk(
 
 // Định nghĩa kiểu Login
 export interface Login {
-    statusCode: number;
-    content: {
+   
       user: {
         id: number;
         name: string;
@@ -43,8 +42,7 @@ export interface Login {
         bookingJob: any[];
       };
       token: string;
-    };
-    dateTime: string;
+  
   };
   
 

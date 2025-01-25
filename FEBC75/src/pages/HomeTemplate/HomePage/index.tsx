@@ -68,6 +68,28 @@ useEffect(() => {
     setSearchTerm((prev) => (prev === "" ? data[0]?.congViec.tenCongViec || "" : prev));
   }
 }, [data]);
+ const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  useEffect(() => {
+    // Lấy thông tin người dùng từ localStorage
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      console.log("User Info:", parsedData); // Log dữ liệu người dùng
+      setIsLoggedIn(true);
+      setUserInfo(parsedData); // Đảm bảo lưu toàn bộ đối tượng
+    }
+  }, []);
+  
+
+  const handleLogout = () => {
+    // Xóa dữ liệu người dùng khỏi localStorage
+    localStorage.removeItem("userData");
+    setIsLoggedIn(false);
+    setUserInfo(null);
+    navigate("/login"); // Điều hướng đến trang đăng nhập
+  };
 
   return (
     <>
@@ -88,26 +110,72 @@ useEffect(() => {
  
 
         {/* Right section */}
-        <div className="flex items-center space-x-3   font-bold ">
-          <a
-            href="/"
-            className="text-gray-50 iphone:text-sm iphoneplus:text-sm hover:text-blue-700 font-bold dark:text-white"
-          >
-            Become a Seller
-          </a>
-          <button
-              onClick={() => navigate("/login")} // Navigate đến trang login
-              className="text-gray-50 text-sm font-bold hover:text-blue-700 dark:text-white"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => navigate("/register")} // Navigate đến trang register
-              className="border-2 text-sm border-gray-50 text-gray-50 px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              Join
-            </button>
-        </div>
+        <div className="flex items-center space-x-3 mt-0 md:mt-0 ml-4">
+            {isLoggedIn && userInfo ? (
+              <div className="relative group flex items-center space-x-2 cursor-pointer">
+              {/* Avatar và tên người dùng */}
+              <div>
+                <img
+                  src={
+                    userInfo?.user?.avatar ||
+                    "./../../../../../public/img/image.png  "
+                  }
+                  alt="Avatar"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div>
+              <p className="text-sm text-gray-50 font-semibold">
+              {userInfo?.user?.name || "User"} {/* Hiển thị "No Name Available" nếu name không tồn tại */}
+  </p>
+              </div>
+                {/* Dropdown menu */}
+
+                <div className="absolute top-8 right-1 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden group-hover:block z-50">
+                  <button
+                   onClick={() => {
+                    if (userInfo && userInfo.user && userInfo.user.id) {
+                      console.log("Navigating to:", `/profile/${userInfo.user.id}`);
+                      navigate(`/profile/${userInfo.user.id}`); // Điều hướng đúng với ID
+                    } else {
+                      console.error("User ID không tồn tại:", userInfo);
+                    }
+                  }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Xem thông tin
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <a
+                  href="/"
+                  className="text-gray-700 text-sm hidden md:inline hover:text-blue-700 font-bold dark:text-white"
+                >
+                  Become a Seller
+                </a>
+                <button
+                  onClick={() => navigate("/login")} // Navigate đến trang login
+                  className="text-gray-700 text-sm font-bold hover:text-blue-700 dark:text-white"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/register")} // Navigate đến trang register
+                  className="border-2 text-sm border-gray-700 text-gray-700 px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  Join
+                </button>
+              </>
+            )}
+          </div>
       </div>
       
 

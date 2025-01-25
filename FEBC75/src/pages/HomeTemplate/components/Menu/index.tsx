@@ -29,7 +29,7 @@ const MenuBar: React.FC = () => {
   }
 
   return (
-    <nav className="menu-bar container justify-items-center border-b ">
+    <nav className="menu-bar container grid-cols-3 sm:grid-cols-6 justify-items-center border-b ">
       <ul className="menu-list">
         {data &&
           data.map((item) => (
