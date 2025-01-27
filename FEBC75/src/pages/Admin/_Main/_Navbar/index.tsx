@@ -1,5 +1,4 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-
 import FiverLogo from "../../../../assets/Fiverr_Logo_Black.png";
 import AdminAvatar from "../../../../assets/AdminAvatar.png";
 import { useUserStore } from "../../../../store/user-store";
@@ -12,24 +11,22 @@ function classNames(...classes: string[]) {
 
 export default function AdminNavbar() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const { user, removeUser } = useUserStore((state) => ({
-    user: state.user,
-    removeUser: state.removeUser,
-  }));
-  const openUpdateModal = () => {
-    setIsUpdateModalOpen(true);
-  };
-  const closeUpdateModal = () => {
-    setIsUpdateModalOpen(false);
-  };
 
-  const handleSignOut = async () => {
+  // Access the Zustand store
+  const user = useUserStore((state) => state.user);
+  const removeUser = useUserStore((state) => state.removeUser);
+
+  const openUpdateModal = () => setIsUpdateModalOpen(true);
+  const closeUpdateModal = () => setIsUpdateModalOpen(false);
+
+  const handleSignOut = () => {
     try {
       removeUser();
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
+
   return (
     <header className="bg-white shadow-md">
       <nav
@@ -38,23 +35,27 @@ export default function AdminNavbar() {
       >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
-            <img className="h-8 w-auto" src={FiverLogo} alt="" />
+            <img className="h-8 w-auto" src={FiverLogo} alt="Fiver Logo" />
           </a>
         </div>
         <div className="flex justify-end">
           <Menu as="div" className="relative ml-3">
             <div>
               <MenuButton className="flex rounded-full bg-white text-sm border-none shadow-lg">
-                <img className="h-10 w-10 rounded-full" src={AdminAvatar} />
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={AdminAvatar}
+                  alt="Admin Avatar"
+                />
               </MenuButton>
             </div>
             <MenuItems className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
               <MenuItem>
-                {({ focus }) => (
+                {({ active }) => (
                   <a
                     href="#"
                     className={classNames(
-                      focus ? "bg-gray-100" : "",
+                      active ? "bg-gray-100" : "",
                       "block px-4 py-2 text-sm text-gray-700"
                     )}
                     onClick={openUpdateModal}
@@ -64,11 +65,11 @@ export default function AdminNavbar() {
                 )}
               </MenuItem>
               <MenuItem>
-                {({ focus }) => (
+                {({ active }) => (
                   <a
                     href="#"
                     className={classNames(
-                      focus ? "bg-gray-100" : "",
+                      active ? "bg-gray-100" : "",
                       "block px-4 py-2 text-sm text-gray-700"
                     )}
                     onClick={handleSignOut}

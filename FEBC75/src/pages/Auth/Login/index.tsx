@@ -1,141 +1,174 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchLogin } from "./slide";
-import { useNavigate, Link } from "react-router-dom";
-import { AppDispatch, RootState } from "./../../../store";
-import "./Sass/sass.scss"; // Import CSS
+import { Link, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import FiverLogo from "../../../assets/Fiverr_Logo_Black.png";
+import { useLogin } from "../../../hooks/user-hook";
+import { User } from "../../../types/User.type";
+import Swal from "sweetalert2";
+import { useUserStore } from "../../../store/user-store";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Trạng thái để hiển thị hoặc ẩn mật khẩu
-
-  const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // Lấy state từ Redux
-  const { loading, error } = useSelector((state: RootState) => state.loginReducer);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    // Kiểm tra xem email và password có rỗng không
-    if (!email || !password) {
-      alert("Vui lòng nhập đầy đủ email và mật khẩu!");
-      return;
-    }
-  
-    // Gọi API login
-    const resultAction = await dispatch(fetchLogin({ email, password }));
-  
-    // Kiểm tra nếu login thành công
-    if (fetchLogin.fulfilled.match(resultAction)) {
-      const userData = resultAction.payload; // Dữ liệu trả về từ server
-      localStorage.setItem("userData", JSON.stringify(userData)); // Lưu toàn bộ dữ liệu vào localStorage
-  
-      console.log("User data saved to localStorage:", userData);
-  
-      // Lấy dữ liệu từ localStorage để kiểm tra role
-      const savedData = JSON.parse(localStorage.getItem("userData") || "{}");
-      const role = savedData.user?.role?.toLowerCase(); // Lấy role từ localStorage và chuyển thành chữ thường
-  
-      if (role) {
-        console.log("Role từ localStorage:", role);
-  
-        // Điều hướng dựa trên role
-        if (role === "admin") {
-          console.log("Navigating to /admin...");
-          navigate("/admin"); // Điều hướng tới trang Admin
-        } else if (role === "user") {
-          console.log("Navigating to /...");
-          navigate("/"); // Điều hướng tới trang chính (HomePage)
-        } else {
-          console.error("Unknown role:", role);
-          alert("Quyền của bạn không được hỗ trợ!");
-        }
-      } else {
-        alert("Không tìm thấy role trong dữ liệu!");
-      }
-    } else if (fetchLogin.rejected.match(resultAction)) {
-      console.error("Login failed:", resultAction.payload); // Hiển thị lỗi trong console
-    }
-  };
-  
-
-  return (
-    <div className="bgLogin min-h-screen flex items-center justify-center ">
-      <div className="bg-white  shadow-lg rounded-lg p-8 w-full max-w-sm relative">
-        {/* Nút Close */}
-        <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-blue-500 text-xl"
-          onClick={() => navigate("/")}
-        >
-          ×
-        </button>
-
-        {/* Tiêu đề */}
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h1>
-
-        {/* Form */}
-        <form onSubmit={handleLogin}>
-          {/* Input Email */}
-          <div className="relative mb-4">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          {/* Input Password */}
-          <div className="relative mb-4">
-            <input
-              type={showPassword ? "text" : "password"} // Hiển thị hoặc ẩn mật khẩu
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-            {/* Biểu tượng con mắt */}
-            <span
-              className="absolute top-3 right-3 text-gray-500 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "👁️" : "🙈"} {/* Biểu tượng con mắt */}
-            </span>
-          </div>
-
-          {/* Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-lg text-white font-semibold transition-all ${
-              loading
-                ? "bg-blue-300 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
-            }`}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        {/* Thông báo lỗi */}
-        {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
-
-        {/* Link đăng ký */}
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Bạn chưa có tài khoản?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
-            Đăng ký
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
+type FormFields = {
+  email: string;
+  password: string;
 };
 
-export default Login;
+export default function Login() {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormFields>();
+  const onSubmit: SubmitHandler<FormFields> = (data) => {
+    login(data);
+  };
+  const setUser = useUserStore((state) => state.setUser);
+  const onSuccess = (user: User) => {
+    setUser(user);
+    if (user.role?.toLocaleLowerCase() === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  };
+  const onError = (error: any) => {
+    if (error && error.content == "Email hoặc mật khẩu không đúng !") {
+      Swal.fire({
+        icon: "error",
+        title: "Sign In Failed",
+        text: "Invalid email or password. Please try again.",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Sign In Failed",
+        text: "An error occurred. Please try again later.",
+      });
+    }
+  };
+  const { mutate: login } = useLogin(onSuccess, onError);
+
+  return (
+    <>
+      <div className="flex min-h-screen">
+        <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="mx-auto w-full max-w-sm lg:w-96">
+            <div>
+              <img className="h-10 w-auto" src={FiverLogo} alt="Your Company" />
+              <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Sign in to your account
+              </h2>
+            </div>
+
+            <div className="mt-10">
+              <div>
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Email address
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        {...register("email")}
+                        id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-red-500">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Password
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        {...register("password")}
+                        id="password"
+                        name="password"
+                        type="password"
+                        autoComplete="current-password"
+                        required
+                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+
+                      {errors.password && (
+                        <p className="text-sm text-red-500">
+                          {errors.password.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <input
+                        id="remember-me"
+                        name="remember-me"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border border-solid border-gray-300 text-indigo-600 focus:ring-0"
+                      />
+                      <label
+                        htmlFor="remember-me"
+                        className="ml-3 block text-sm leading-6 text-gray-700"
+                      >
+                        Remember me
+                      </label>
+                    </div>
+
+                    <div className="text-sm leading-6">
+                      <a
+                        href="#"
+                        className="font-semibold text-indigo-600 hover:text-indigo-500"
+                      >
+                        Forgot password?
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button
+                      type="submit"
+                      className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 border-transparent focus:border-transparent"
+                    >
+                      Sign in
+                    </button>
+                  </div>
+                </form>
+                <p className="mt-10 text-center text-sm text-gray-500">
+                  Not a member?{" "}
+                  <Link
+                    to="/register"
+                    className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                  >
+                    Sign up now
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="relative hidden flex-1 lg:block">
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+            alt=""
+          />
+        </div>
+      </div>
+    </>
+  );
+}

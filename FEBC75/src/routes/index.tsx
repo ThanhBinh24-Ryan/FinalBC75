@@ -10,6 +10,11 @@ import Register from "../pages/Auth/Register";
 import AdminPage from "../pages/Admin";
 import ProfileUser from "../pages/HomeTemplate/profile/index";
 import EditProfile from "../pages/HomeTemplate/edit-Profile/index";
+import ServiceList from "../pages/Admin/_Main/_List/Services";
+import UserList from "../pages/Admin/_Main/_List/Users";
+import JobList from "../pages/Admin/_Main/_List/Jobs";
+import JobTypeList from "../pages/Admin/_Main/_List/JobTypes";
+
 type TRoute = {
   path: string;
   Component: React.ComponentType;
@@ -58,8 +63,25 @@ const routes: TRoute[] = [
   {
     path: "admin",
     Component: AdminPage,
+    children: [
+      {
+        path: "services",
+        Component: ServiceList,
+      },
+      {
+        path: "users",
+        Component: UserList,
+      },
+      {
+        path: "jobs",
+        Component: JobList,
+      },
+      {
+        path: "job-types",
+        Component: JobTypeList,
+      },
+    ],
   },
- 
 ];
 
 const renderRoutes = () => {
