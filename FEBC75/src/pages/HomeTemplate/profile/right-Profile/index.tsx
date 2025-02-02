@@ -50,7 +50,7 @@ const ProfileRight: React.FC = () => {
         <div className="flex items-center">
           <div className="bg-gray-200 w-12 h-12 rounded-full  items-center justify-center mr-4">
             <img
-              src="./../../../../../public/img/images-h.png" // Thay thế bằng URL ảnh của bạn
+              src="/img/images-h.png" // Thay thế bằng URL ảnh của bạn
               alt="Icon"
               className="w-full h-full"
             />
