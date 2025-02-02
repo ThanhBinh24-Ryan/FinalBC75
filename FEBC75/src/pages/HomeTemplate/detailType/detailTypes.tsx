@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { ForID } from "./slide"; // Import interface từ file slide.ts
-import './Sass/sass.scss'
+
 // Định nghĩa kiểu dữ liệu cho props
 interface DetailJobItemProps {
   data: ForID; // Nhận dữ liệu từ file cha
