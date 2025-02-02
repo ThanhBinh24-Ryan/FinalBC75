@@ -95,7 +95,7 @@ useEffect(() => {
     <>
     <nav className="bg-white border-gray-200 dark:bg-gray-900 object-cover"  
     style={{
-      backgroundImage: `url("../../../../public/img/00. Pics/5.png")`, backgroundSize: "cover", backgroundPosition: "center"
+      backgroundImage: `url("/img/00. Pics/5.png")`, backgroundSize: "cover", backgroundPosition: "center"
     }}
     >
       <div className="max-w-screen-xl flex  items-center justify-between mx-auto p-4">
