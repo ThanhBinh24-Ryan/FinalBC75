@@ -118,7 +118,7 @@ useEffect(() => {
                 <img
                   src={
                     userInfo?.user?.avatar ||
-                    "./../../../../../public/img/image.png  "
+                    "/img/image.png  "
                   }
                   alt="Avatar"
                   className="w-10 h-10 rounded-full"
@@ -353,7 +353,7 @@ useEffect(() => {
         {/* Card 2 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="../../../../public/img/00. Pics/crs8.png"
+            src="/img/00. Pics/crs8.png"
             alt="WordPress"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -366,7 +366,7 @@ useEffect(() => {
         {/* Card 3 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="../../../../public/img/00. Pics/crs9.png"
+            src="/img/00. Pics/crs9.png"
             alt="Voice Over"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -379,7 +379,7 @@ useEffect(() => {
         {/* Card 4 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="../../../../public/img/00. Pics/crs10.png"
+            src="/img/00. Pics/crs10.png"
             alt="Video Explainer"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -392,7 +392,7 @@ useEffect(() => {
         {/* Card 5 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="../../../../public/img/00. Pics/crs7.png"
+            src="/img/00. Pics/crs7.png"
             alt="Social Media"
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -473,7 +473,7 @@ useEffect(() => {
      
         <div className="w-full">
     <video className="w-full" controls>
-  <source src="../../../../public/video1.mp4" type="video/mp4" />
+  <source src="/video1.mp4" type="video/mp4" />
   Your browser does not support the video tag.
 </video>
 
@@ -488,7 +488,7 @@ useEffect(() => {
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative w-72 h-48 md:w-96 md:h-64">
           <video className="w-full" controls>
-          <source src="../../../../public/video2.mp4" type="video/mp4" />
+          <source src="/video2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
           </div>
