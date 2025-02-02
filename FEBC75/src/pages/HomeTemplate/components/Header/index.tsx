@@ -88,7 +88,7 @@ export default function Header() {
             {/* Logo */}
             <a href="/" className="flex items-center space-x-3">
               <img
-                src="../../../../../public/img/00. Pics/Fiverr_Logo_Black.png"
+                src="/img/00. Pics/Fiverr_Logo_Black.png"
                 alt="Logo"
                 style={{ width: "80px" }}
               />
@@ -152,7 +152,7 @@ export default function Header() {
                 <img
                   src={
                     userInfo?.user?.avatar ||
-                    "./../../../../../public/img/image.png  "
+                    "/img/image.png  "
                   }
                   alt="Avatar"
                   className="w-10 h-10 rounded-full"
