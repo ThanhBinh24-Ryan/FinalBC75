@@ -340,7 +340,7 @@ useEffect(() => {
         {/* Card 1 */}
         <div className="scroll-snap-center min-w-[300px] relative group flex-shrink-0">
           <img
-            src="../../../../public/img/00. Pics/crs6.png"
+            src="/img/00. Pics/crs6.png"
             alt="Logo Design"
             className="w-full h-48 object-cover rounded-lg"
           />
