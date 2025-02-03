@@ -54,22 +54,24 @@ export default function AddServiceModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-      <div className="bg-white rounded-lg p-6 z-10 w-11/12 md:w-3/4 lg:w-1/3 relative">
+      <div className="bg-white rounded-2xl shadow-lg p-6 z-10 w-full max-w-md md:max-w-lg lg:max-w-xl overflow-y-auto max-h-full relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none"
+          className="absolute top-3 right-3 text-gray-400 hover:text-red-500 focus:outline-none"
         >
           <XMarkIcon className="h-6 w-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Service</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <h2 className="text-2xl font-bold text-center text-indigo-600 mb-6">
+          Add New Service
+        </h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label
               htmlFor="maCongViec"
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="block text-sm font-medium text-gray-700"
             >
               Job ID
             </label>
@@ -80,17 +82,17 @@ export default function AddServiceModal({
               })}
               type="number"
               id="maCongViec"
-              className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
             {errors.maCongViec && (
-              <p className="text-sm text-red-500">This field is required</p>
+              <p className="text-xs text-red-500 mt-1">Job ID is required.</p>
             )}
           </div>
 
           <div>
             <label
               htmlFor="maNguoiThue"
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="block text-sm font-medium text-gray-700"
             >
               User ID
             </label>
@@ -101,17 +103,17 @@ export default function AddServiceModal({
               })}
               type="number"
               id="maNguoiThue"
-              className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
             {errors.maNguoiThue && (
-              <p className="text-sm text-red-500">This field is required</p>
+              <p className="text-xs text-red-500 mt-1">User ID is required.</p>
             )}
           </div>
 
           <div>
             <label
               htmlFor="ngayThue"
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="block text-sm font-medium text-gray-700"
             >
               Hire Date
             </label>
@@ -119,39 +121,41 @@ export default function AddServiceModal({
               {...register("ngayThue", { required: true })}
               type="date"
               id="ngayThue"
-              className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
             {errors.ngayThue && (
-              <p className="text-sm text-red-500">This field is required</p>
+              <p className="text-xs text-red-500 mt-1">
+                Hire Date is required.
+              </p>
             )}
           </div>
 
-          <div>
-            <label
-              htmlFor="hoanThanh"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Completed
-            </label>
+          <div className="flex items-center space-x-2">
             <input
               {...register("hoanThanh")}
               type="checkbox"
               id="hoanThanh"
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
+            <label
+              htmlFor="hoanThanh"
+              className="text-sm font-medium text-gray-700"
+            >
+              Completed
+            </label>
           </div>
 
-          <div className="mt-5 flex justify-evenly">
+          <div className="mt-6 flex justify-between">
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full mr-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Add Service
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full ml-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Cancel
             </button>

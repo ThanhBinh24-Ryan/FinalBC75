@@ -61,7 +61,7 @@ export default function ServiceList() {
             onClick={openAddServiceModal}
             className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
           >
-            Create new Service
+            Add new Service
           </button>
         </div>
       </div>

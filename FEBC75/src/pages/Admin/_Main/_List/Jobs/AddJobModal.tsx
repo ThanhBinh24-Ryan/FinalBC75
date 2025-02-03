@@ -303,9 +303,9 @@ export default function AddJobModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-      <div className="bg-white rounded-lg p-6 z-10 w-11/12 md:w-3/4 lg:w-1/3 relative">
+      <div className="bg-white rounded-lg p-4 sm:p-6 z-10 w-full max-w-lg sm:max-w-md md:max-w-lg lg:max-w-xl max-h-screen overflow-y-auto relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none"
@@ -313,8 +313,8 @@ export default function AddJobModal({
           <XMarkIcon className="h-6 w-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Job</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <h2 className="text-xl font-semibold mb-4 text-center">Add New Job</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Job Title */}
           <div>
             <label
@@ -416,17 +416,17 @@ export default function AddJobModal({
           </div>
 
           {/* Buttons */}
-          <div className="mt-5 flex justify-evenly">
+          <div className="mt-5 flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-4">
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Add Job
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Cancel
             </button>
