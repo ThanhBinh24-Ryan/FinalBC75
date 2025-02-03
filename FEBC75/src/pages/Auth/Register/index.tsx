@@ -93,14 +93,9 @@ export default function Register() {
       <div className="flex min-h-screen">
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
-            <div className="flex items-center">
+            <div className="flex flex-col items-center">
               <img className="h-10 w-auto" src={FiverLogo} alt="Your Company" />
-              <div>
-                <h2 className="ml-5 text-4xl font-bold text-gray-900">
-                  {" "}
-                  Sign up
-                </h2>
-              </div>
+              <h2 className="mt-5 text-4xl font-bold text-gray-900">Sign up</h2>
             </div>
 
             <div className="mt-10">

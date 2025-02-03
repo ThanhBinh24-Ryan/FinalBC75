@@ -111,6 +111,21 @@ const Login = () => {
                 </span>
               </div>
             </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                />
+                <span className="ml-2">Remember me</span>
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-sm text-indigo-600 hover:text-indigo-500"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <button
               type="submit"
               disabled={loading}
@@ -125,12 +140,12 @@ const Login = () => {
             <p className="text-red-500 text-sm mt-4 text-center">{error}</p>
           )}
           <p className="mt-10 text-center text-sm text-gray-500">
-            Bạn chưa có tài khoản?{" "}
+            Don't have an account?{" "}
             <Link
               to="/register"
               className="text-indigo-600 hover:text-indigo-500"
             >
-              Đăng ký
+              Sign up
             </Link>
           </p>
         </div>
