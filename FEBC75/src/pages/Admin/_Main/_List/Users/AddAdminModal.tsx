@@ -40,11 +40,12 @@ export default function AddAdminModal({
     Swal.fire({
       icon: "success",
       title: "Success",
-      text: "New admin created successfully",
+      text: "New account created successfully",
     }).then(() => {
       onAddAdmin();
     });
   };
+
   const onError = (error: any) => {
     console.log(error);
     Swal.fire({
@@ -53,7 +54,9 @@ export default function AddAdminModal({
       text: error.content + " Please try again later.",
     });
   };
+
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [selectedRole, setSelectedRole] = useState("ADMIN");
 
   const { mutate: signUp } = useAddAdmin(onSuccess, onError);
   const {
@@ -62,9 +65,11 @@ export default function AddAdminModal({
     watch,
     formState: { errors },
   } = useForm<FormFields>();
+
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     const updatedData = {
       ...data,
+      role: selectedRole,
     };
     console.log(updatedData);
     signUp(updatedData);
@@ -74,14 +79,6 @@ export default function AddAdminModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <input
-        {...register("role")}
-        className="hidden"
-        type="text"
-        name="role"
-        id="role"
-        value={"ADMIN"}
-      />
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
       <div className="bg-white rounded-lg p-6 z-10 w-11/12 md:w-3/4 lg:w-1/3 relative">
         <button
@@ -91,8 +88,26 @@ export default function AddAdminModal({
           <XMarkIcon className="h-6 w-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Admin</h2>
+        <h2 className="text-xl font-semibold mb-4">Add New Admin or User</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Role
+            </label>
+            <select
+              {...register("role")}
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="block w-full mt-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+            >
+              <option value="ADMIN">Admin</option>
+              <option value="USER">User</option>
+            </select>
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -125,6 +140,7 @@ export default function AddAdminModal({
               <p className="text-sm text-red-500">{errors.email.message}</p>
             )}
           </div>
+
           <div>
             <label
               htmlFor="fullname"
@@ -152,6 +168,7 @@ export default function AddAdminModal({
               )}
             </div>
           </div>
+
           <div>
             <label
               htmlFor="password"
@@ -179,6 +196,7 @@ export default function AddAdminModal({
               <p className="text-sm text-red-500">{errors.password.message}</p>
             )}
           </div>
+
           <div>
             <label
               htmlFor="confirm-password"
@@ -220,7 +238,7 @@ export default function AddAdminModal({
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Add Admin
+              Add
             </button>
             <button
               type="button"
