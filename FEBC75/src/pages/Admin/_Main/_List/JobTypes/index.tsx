@@ -16,14 +16,22 @@ export default function JobTypeList() {
   const [searchQuery, setSearchQuery] = useState("");
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
   }
 
-  const filteredJobTypes = jobTypes?.filter((jobType: LoaiCongViec) =>
-    jobType.tenLoaiCongViec?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Trim spaces from the search query and job type names for comparison
+  const filteredJobTypes = jobTypes?.filter((jobType: LoaiCongViec) => {
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const trimmedJobTypeName =
+      jobType.tenLoaiCongViec?.trim().toLowerCase() || "";
+    return trimmedJobTypeName.includes(trimmedQuery);
+  });
 
-  const totalPages = Math.ceil((jobTypes?.length || 0) / PAGE_SIZE);
+  const totalPages = Math.ceil((filteredJobTypes?.length || 0) / PAGE_SIZE);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
   const jobTypesInCurrentPage = filteredJobTypes?.slice(startIndex, endIndex);
@@ -37,126 +45,127 @@ export default function JobTypeList() {
   };
 
   return (
-    <div className="mb-5 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto border-b border-gray-200">
-        <div className="sm:mt-0 sm:pt-4 sm:pb-2 lg:pt-6 lg:pb-4">
-          {/* <button
-            type="button"
-            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-          >
-            Create new job
-          </button> */}
-        </div>
+    <div className="px-4 sm:px-6 lg:px-8 py-6">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Job Type Management
+        </h2>
       </div>
-      <div>
-        <div className="mx-auto mt-4 relative rounded-md shadow-sm">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MagnifyingGlassIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          </div>
-          <input
-            type="search"
-            name="search"
-            id="search"
-            className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+
+      {/* Search Bar */}
+      <div className="relative mb-6">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
         </div>
+        <input
+          type="search"
+          name="search"
+          id="search"
+          className="block w-full rounded-lg border border-gray-300 py-3 pl-12 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+          placeholder="Search job types by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
-      <div className="mt-8 flow-root">
-        <div className="mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="w-full divide-y divide-gray-300">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="w-30 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Job Type Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="w-30 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Job Type Description
-                  </th>
+
+      {/* Table Section */}
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                className="py-4 px-6 text-left text-sm font-semibold text-gray-900"
+              >
+                Job Type ID
+              </th>
+              <th
+                scope="col"
+                className="py-4 px-6 text-left text-sm font-semibold text-gray-900"
+              >
+                Job Type Name
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {jobTypesInCurrentPage?.length > 0 ? (
+              jobTypesInCurrentPage.map((jobType: LoaiCongViec) => (
+                <tr
+                  key={jobType.id}
+                  className="hover:bg-gray-50 transition-all duration-200"
+                >
+                  <td className="py-4 px-6 text-sm text-gray-600">
+                    {jobType.id}
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-900">
+                    {jobType.tenLoaiCongViec}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {jobTypesInCurrentPage?.map((jobType: LoaiCongViec) => (
-                  <tr key={jobType.id}>
-                    <td className="whitespace-nowrap py-5 px-8 text-sm sm:pl-0">
-                      <div className="ml-4">
-                        <div className="font-medium text-gray-900">
-                          {jobType.id}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap py-5 text-left text-sm text-gray-500">
-                      <div>{jobType.tenLoaiCongViec}</div>
-                    </td>
-                    {/* <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                        <Cog6ToothIcon className="h-5 w-5" />
-                      </a>
-                    </td>
-                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a href="#" className="text-red-600 hover:text-red-900">
-                        <TrashIcon className="h-5 w-5" />
-                      </a>
-                    </td> */}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="py-10 text-center text-gray-500">
+                  No job types found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-      <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
-        <div className="-mt-px flex w-0 flex-1">
+
+      {/* Pagination */}
+      <nav className="flex items-center justify-between border-t border-gray-200 px-4 py-6 sm:px-0">
+        <div className="flex items-center gap-x-2">
+          <p className="text-sm text-gray-700">
+            Showing <span className="font-medium">{startIndex + 1}</span> to{" "}
+            <span className="font-medium">
+              {Math.min(endIndex, filteredJobTypes?.length || 0)}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium">{filteredJobTypes?.length || 0}</span>{" "}
+            job types
+          </p>
+        </div>
+        <div className="flex items-center gap-x-2">
           <button
             onClick={goToPreviousPage}
             disabled={currentPage === 1}
-            className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            className={`inline-flex items-center gap-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
+              currentPage === 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+            }`}
           >
-            <ArrowLongLeftIcon
-              className="mr-3 h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
+            <ArrowLongLeftIcon className="h-5 w-5" />
             Previous
           </button>
-        </div>
-        <div className="hidden md:-mt-px md:flex">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentPage(index + 1)}
-              className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
-                currentPage === index + 1
-                  ? "border-indigo-500 text-indigo-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-        <div className="-mt-px flex w-0 flex-1 justify-end">
+          <div className="flex items-center gap-x-1">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  currentPage === index + 1
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            className={`inline-flex items-center gap-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
+              currentPage === totalPages
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+            }`}
           >
             Next
-            <ArrowLongRightIcon
-              className="ml-3 h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
+            <ArrowLongRightIcon className="h-5 w-5" />
           </button>
         </div>
       </nav>

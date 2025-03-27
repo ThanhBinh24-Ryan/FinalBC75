@@ -1,126 +1,53 @@
 .hide-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-  
-  .hide-scrollbar::-webkit-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
   }
-// /* iPhone 6-7-8 */
-// @media only screen and (max-width: 375px) {
-//   .flex-col {
-//     margin-left: 10px;
-//     margin-top: 10px;
-//     margin-bottom: 10px;
-//   }
-//   .text-3xl {
-//     font-size: 1.5rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+}
 
-// /* iPhone 6-7-8 Plus */
-// @media only screen and (max-width: 414px) {
-//   .flex-col {
-//     margin-left: 20px;
-//     margin-top: 15px;
-//     margin-bottom: 15px;
-//   }
-//   .text-3xl {
-//     font-size: 1.75rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+body {
+  font-family: "Poppins", sans-serif;
+}
 
-// /* iPad */
-// @media only screen and (max-width: 768px) {
-//   .flex-col {
-//     margin-left: 30px;
-//     margin-top: 20px;
-//     margin-bottom: 20px;
-//   }
-//   .text-3xl {
-//     font-size: 2rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+button {
+  transition: all 0.3s ease;
+}
 
-// /* Desktop 1200 trở lên */
-// @media only screen and (min-width: 1200px) {
-//   .flex-col {
-//     margin-left: 44px;
-//     margin-top: 20px;
-//     margin-bottom: 12px;
-//   }
-//   .text-3xl {
-//     font-size: 3rem;
-//   }
-//   .w-96 {
-//     width: 24rem;
-//   }
-// }
-// /* iPhone 6-7-8 */
-// @media only screen and (max-width: 375px) {
-//   .flex-col {
-//     margin-left: 10px;
-//     margin-top: 10px;
-//     margin-bottom: 10px;
-//   }
-//   .text-3xl {
-//     font-size: 1.5rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+.job-search-container .popular-button {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
 
-/* iPhone 6-7-8 Plus */
-// @media only screen and (max-width: 414px) {
-//   .flex-col {
-//     margin-left: 20px;
-//     margin-top: 15px;
-//     margin-bottom: 15px;
-//   }
-//   .text-3xl {
-//     font-size: 1rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+.job-search-container .popular-button:hover {
+  background-color: #d1fae5; /* Equivalent to Tailwind's bg-green-100 */
+  color: #047857; /* Equivalent to Tailwind's text-green-700 */
+}
 
-// /* iPad */
-// @media only screen and (max-width: 768px) {
-//   .flex-col {
-//     margin-left: 30px;
-//     margin-top: 20px;
-//     margin-bottom: 20px;
-//   }
-//   .text-3xl {
-//     font-size: 2rem;
-//   }
-//   .w-96 {
-//     width: 100%;
-//   }
-// }
+.dropdown {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  transition-delay: 100ms;
+}
 
-// /* Desktop 1200 trở lên */
-// @media only screen and (min-width: 1200px) {
-//   .flex-col {
-//     margin-left: 44px;
-//     margin-top: 20px;
-//     margin-bottom: 12px;
-//   }
-//   .text-3xl {
-//     font-size: 2rem;
-//   }
-//   .w-96 {
-//     width: 24rem;
-//   }
-// }
+.group:hover .dropdown {
+  opacity: 1;
+  transition-delay: 0ms;
+}
+
+.dropdown:hover {
+  opacity: 1;
+  transition-delay: 0ms;
+}
+
+.group:not(:hover) .dropdown {
+  transition-delay: 300ms; /* Delay the fade-out by 300ms */
+}

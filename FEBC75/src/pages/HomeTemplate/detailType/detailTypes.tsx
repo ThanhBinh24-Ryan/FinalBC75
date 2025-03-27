@@ -1,55 +1,65 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { ForID } from "./slide"; // Import interface từ file slide.ts
+import { useNavigate } from "react-router-dom";
+import { ForID } from "./slide";
 
-// Định nghĩa kiểu dữ liệu cho props
+// Define the props interface
 interface DetailJobItemProps {
-  data: ForID; // Nhận dữ liệu từ file cha
+  data: ForID; // Data received from the parent component
 }
 
 const DetailJobItem: React.FC<DetailJobItemProps> = ({ data }) => {
-  const navigate = useNavigate(); // Hook điều hướng
+  const navigate = useNavigate();
 
-  // Kiểm tra dữ liệu trước khi render
+  // Check data validity before rendering
   if (!data || !data.congViec) {
-    return <p className="text-red-500">Dữ liệu không hợp lệ</p>;
+    return <p className="text-red-500 text-center py-4">Invalid data</p>;
   }
 
-  const { congViec, tenLoaiCongViec, tenNhomChiTietLoai, tenChiTietLoai } = data;
+  const { congViec, tenLoaiCongViec, tenNhomChiTietLoai, tenChiTietLoai } =
+    data;
 
-  // Hàm xử lý điều hướng
+  // Handle navigation to the job detail page
   const handleNavigate = () => {
     if (congViec.id) {
-      navigate(`/Detail-Job/${congViec.id}`); // Điều hướng đến trang Detail-Job/:id
+      navigate(`/Detail-Job/${congViec.id}`);
     }
   };
 
   return (
     <div className="detailtype">
-    <div className="  bg-white border border-gray-200 rounded-lg shadow-lg p-4 mb-4">
-      {/* Hình ảnh (click để điều hướng) */}
-      <img
-        src={congViec.hinhAnh || "https://via.placeholder.com/150"} // Ảnh dự phòng
-        alt={congViec.tenCongViec || "Công việc"}
-        className=" w-full h-40 object-cover rounded cursor-pointer"
-        onClick={handleNavigate} // Bắt sự kiện click
-        onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/150")} // Ảnh mặc định nếu lỗi
-      />
-      {/* Nội dung */}
-      <div className="mt-4">
-        {/* Tên loại công việc (click để điều hướng) */}
-        <h1
-          className="text-lg font-bold text-gray-800 truncate cursor-pointer"
-          onClick={handleNavigate} // Bắt sự kiện click
-        >
-          {tenLoaiCongViec || "Chưa cập nhật"}
-        </h1>
-        {/* Tên nhóm chi tiết */}
-        <h2 className="text-sm text-gray-600 truncate">{tenNhomChiTietLoai || "Chưa cập nhật"}</h2>
-        {/* Tên chi tiết loại */}
-        <p className="text-sm text-gray-500 truncate">{tenChiTietLoai || "Chưa cập nhật"}</p>
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 mb-4 transition-all duration-200 hover:shadow-md">
+        {/* Image (clickable to navigate) */}
+        <div className="relative overflow-hidden rounded-lg">
+          <img
+            src={congViec.hinhAnh || "https://via.placeholder.com/150"}
+            alt={congViec.tenCongViec || "Job"}
+            className="w-full h-40 object-cover rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105"
+            onClick={handleNavigate}
+            onError={(e) =>
+              (e.currentTarget.src = "https://via.placeholder.com/150")
+            }
+          />
+        </div>
+
+        {/* Content */}
+        <div className="mt-3">
+          {/* Job Type (clickable to navigate) */}
+          <h1
+            className="text-lg font-semibold text-gray-800 truncate cursor-pointer hover:text-blue-600 transition-colors duration-200"
+            onClick={handleNavigate}
+          >
+            {tenLoaiCongViec || "Not updated"}
+          </h1>
+          {/* Job Group */}
+          <h2 className="text-sm text-gray-600 truncate mt-1">
+            {tenNhomChiTietLoai || "Not updated"}
+          </h2>
+          {/* Job Detail Type */}
+          <p className="text-sm text-gray-500 truncate mt-1">
+            {tenChiTietLoai || "Not updated"}
+          </p>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

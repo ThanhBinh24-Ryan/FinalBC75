@@ -1,17 +1,17 @@
-import FiverLogo from "../../../assets/Fiverr_Logo_Black.png";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { useSignUp } from "../../../hooks/user-hook";
+import { useSkills } from "../../../hooks/skill-hook";
+import { useInputState } from "../../../hooks/utils";
+import FiverrLogo from "../../../assets/Fiverr_Logo_Black.png";
 import {
   EnvelopeIcon,
   ShieldCheckIcon,
   ShieldExclamationIcon,
   UserCircleIcon,
 } from "@heroicons/react/20/solid";
-import { useInputState } from "../../../hooks/utils";
-import { useSkills } from "../../../hooks/skill-hook";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { useSignUp } from "../../../hooks/user-hook";
 import Swal from "sweetalert2";
-import { useState } from "react";
 
 type FormFields = {
   id: number;
@@ -44,22 +44,20 @@ export default function Register() {
   } = useInputState<string>([]);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const navigate = useNavigate();
+
   const onSuccess = () => {
     Swal.fire({
       icon: "success",
-      title: "Sign Up Successfully",
-      text: "Please login to Fiverr using your newly created email and password",
-    }).then(() => {
-      navigate("/login");
-    });
+      title: "Sign Up Successful",
+      text: "Please log in with your new email and password.",
+    }).then(() => navigate("/login"));
   };
 
   const onError = (error: any) => {
-    console.log(error);
     Swal.fire({
       icon: "error",
-      title: "Sign In Failed",
-      text: error + " Please try again later.",
+      title: "Sign Up Failed",
+      text: `${error}. Please try again later.`,
     });
   };
 
@@ -70,367 +68,325 @@ export default function Register() {
     watch,
     formState: { errors },
   } = useForm<FormFields>();
+
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     const updatedData = {
       ...data,
       skill: skills,
       certification: certifications,
     };
-    console.log(updatedData);
     signUp(updatedData);
   };
 
   return (
-    <>
-      <input
-        {...register("role")}
-        className="hidden"
-        type="text"
-        name="role"
-        id="role"
-        value={"USER"}
-      />
-      <div className="flex min-h-screen">
-        <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-          <div className="mx-auto w-full max-w-sm lg:w-96">
-            <div className="flex flex-col items-center">
-              <img className="h-10 w-auto" src={FiverLogo} alt="Your Company" />
-              <h2 className="mt-5 text-4xl font-bold text-gray-900">Sign up</h2>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Form Section */}
+      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div className="mx-auto w-full max-w-sm lg:w-96">
+          <div className="text-center">
+            <img
+              className="h-12 w-auto mx-auto"
+              src={FiverrLogo}
+              alt="Fiverr Logo"
+            />
+            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+              Create an Account
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Join us today! Fill in your details below.
+            </p>
+          </div>
+
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <input {...register("role")} type="hidden" value="USER" />
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email Address
+              </label>
+              <div className="relative mt-1">
+                <EnvelopeIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
+                <input
+                  {...register("email", {
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  type="email"
+                  id="email"
+                  required
+                  className="block w-full pl-10 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your email"
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-10">
-              <div>
-                <form
-                  action="#"
-                  method="POST"
-                  className="space-y-6"
-                  onSubmit={handleSubmit(onSubmit)}
-                >
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Email
-                    </label>
-                    <div className="relative mt-2 rounded-md shadow-sm">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <EnvelopeIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        {...register("email", {
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid email address",
-                          },
-                        })}
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                    {errors.email && (
-                      <p className="text-sm text-red-500">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Password
-                    </label>
-                    <div className="relative mt-2 rounded-md shadow-sm">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <ShieldExclamationIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        {...register("password")}
-                        type="password"
-                        name="password"
-                        id="password"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                    {errors.password && (
-                      <p className="text-sm text-red-500">
-                        {errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="confirm-password"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Confirm Password
-                    </label>
-                    <div className="relative mt-2 rounded-md shadow-sm">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <ShieldCheckIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        {...register("confirmPassword", {
-                          validate: (value) =>
-                            value === watch("password") ||
-                            "Password and Confirm Password do not match",
-                        })}
-                        type="password"
-                        name="confirmPassword"
-                        id="confirm-password"
-                        className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                        onChange={(e) => {
-                          const confirmPassword = e.target.value;
-                          const password = watch("password");
-                          setPasswordsMatch(confirmPassword === password);
-                        }}
-                      />
-                    </div>
-                    {!passwordsMatch && (
-                      <p className="text-sm text-red-500">
-                        Passwords do not match
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex">
-                    <div className="w-2/3 pr-4">
-                      <label
-                        htmlFor="fullname"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Full name
-                      </label>
-                      <div className="relative mt-2 rounded-md shadow-sm">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <UserCircleIcon
-                            className="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <input
-                          {...register("name")}
-                          type="text"
-                          name="name"
-                          id="name"
-                          required
-                          className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        {errors.name && (
-                          <p className="text-sm text-red-500">
-                            {errors.name.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="w-1/3">
-                      <label
-                        htmlFor="gender"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Gender
-                      </label>
-                      <select
-                        {...register("gender")}
-                        id="gender"
-                        name="gender"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        defaultValue="Male"
-                      >
-                        <option value="true">Male</option>
-                        <option value="false">Female</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="flex">
-                    <div className="w-2/3 pr-4">
-                      <label
-                        htmlFor="phone-number"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Phone Number
-                      </label>
-                      <div className="relative mt-2 rounded-md shadow-sm">
-                        <div className="absolute inset-y-0 left-0 flex items-center">
-                          <label htmlFor="country" className="sr-only">
-                            Country
-                          </label>
-                          <select
-                            id="country"
-                            name="country"
-                            autoComplete="country"
-                            className="h-full font-extralight rounded-md border-0 bg-transparent py-0 pl-3 pr-7 text-gray-500"
-                          >
-                            <option>VN</option>
-                            <option>US</option>
-                            <option>EU</option>
-                          </select>
-                        </div>
-                        <input
-                          {...register("phone")}
-                          type="text"
-                          name="phone"
-                          id="phone-number"
-                          required
-                          className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400sm:text-sm sm:leading-6"
-                        />
-                        {errors.phone && (
-                          <p className="text-sm text-red-500">
-                            {errors.phone.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="w-1/3">
-                      <label
-                        htmlFor="birthday"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Birthday
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          {...register("birthday")}
-                          id="birthday"
-                          name="birthday"
-                          type="date"
-                          autoComplete="bday-day"
-                          required
-                          className="text-sm block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="location"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Skills
-                    </label>
-                    {skills.map((_, index) => (
-                      <div key={index} className="mt-2 flex">
-                        <select
-                          id="location"
-                          name="location"
-                          className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
-                          onChange={(e) =>
-                            handleSkillChange(index, e.currentTarget.value)
-                          }
-                        >
-                          {skillsData?.map((skillData) => (
-                            <option
-                              key={skillData.id}
-                              value={skillData.tenSkill}
-                            >
-                              {skillData.tenSkill}
-                            </option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveSkill(index)}
-                          className="ml-2 rounded-md bg-red-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-                        >
-                          -
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleAddSkill(skillsData?.[0].tenSkill || "")
-                      }
-                      className="mt-2 rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="certifications"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Certifications
-                    </label>
-                    {certifications.map((certification, index) => (
-                      <div key={index} className="mt-2 flex">
-                        <input
-                          type="text"
-                          name={`certification-${index}`}
-                          id={`certification-${index}`}
-                          value={certification}
-                          onChange={(e) =>
-                            handleCertificationChange(index, e.target.value)
-                          }
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveCertification(index)}
-                          className="ml-2 rounded-md bg-red-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-                        >
-                          -
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => handleAddCertification("")}
-                      className="mt-2 rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <div>
-                    <button
-                      type="submit"
-                      className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 border-transparent focus:border-transparent"
-                    >
-                      Sign up
-                    </button>
-                  </div>
-                </form>
-                <p className="mt-10 text-center text-sm text-gray-500">
-                  Already had account?
-                  <Link
-                    to="/login"
-                    className="text-lg font-semibold pl-2 leading-6 text-indigo-600 hover:text-indigo-500"
-                  >
-                    Sign in now
-                  </Link>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <div className="relative mt-1">
+                <ShieldExclamationIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
+                <input
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                  type="password"
+                  id="password"
+                  required
+                  className="block w-full pl-10 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your password"
+                />
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
                 </p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label
+                htmlFor="confirm-password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Confirm Password
+              </label>
+              <div className="relative mt-1">
+                <ShieldCheckIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
+                <input
+                  {...register("confirmPassword", {
+                    validate: (value) =>
+                      value === watch("password") || "Passwords do not match",
+                  })}
+                  type="password"
+                  id="confirm-password"
+                  required
+                  className="block w-full pl-10 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Confirm your password"
+                  onChange={(e) =>
+                    setPasswordsMatch(e.target.value === watch("password"))
+                  }
+                />
+              </div>
+              {!passwordsMatch && (
+                <p className="mt-1 text-sm text-red-600">
+                  Passwords do not match
+                </p>
+              )}
+            </div>
+
+            {/* Full Name & Gender */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Full Name
+                </label>
+                <div className="relative mt-1">
+                  <UserCircleIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
+                  <input
+                    {...register("name", { required: "Full name is required" })}
+                    type="text"
+                    id="name"
+                    required
+                    className="block w-full pl-10 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Gender
+                </label>
+                <select
+                  {...register("gender")}
+                  id="gender"
+                  className="mt-1 block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  defaultValue="true"
+                >
+                  <option value="true">Male</option>
+                  <option value="false">Female</option>
+                </select>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="relative hidden flex-1 lg:block">
-          <img
-            className="absolute inset-0 h-full w-full object-cover"
-            src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
-            alt=""
-          />
+
+            {/* Phone & Birthday */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2">
+                <label
+                  htmlFor="phone-number"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone Number
+                </label>
+                <div className="relative mt-1">
+                  <select className="absolute left-0 top-0 h-full py-2 pl-3 pr-2 border-r border-gray-300 bg-gray-50 rounded-l-md text-gray-500 sm:text-sm">
+                    <option>VN</option>
+                    <option>US</option>
+                    <option>EU</option>
+                  </select>
+                  <input
+                    {...register("phone", {
+                      required: "Phone number is required",
+                    })}
+                    type="text"
+                    id="phone-number"
+                    required
+                    className="block w-full pl-16 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="birthday"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Birthday
+                </label>
+                <input
+                  {...register("birthday", {
+                    required: "Birthday is required",
+                  })}
+                  type="date"
+                  id="birthday"
+                  required
+                  className="mt-1 block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Skills */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Skills
+              </label>
+              {skills.map((skill, index) => (
+                <div key={index} className="mt-2 flex items-center gap-2">
+                  <select
+                    value={skill}
+                    onChange={(e) => handleSkillChange(index, e.target.value)}
+                    className="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    {skillsData?.map((skillData) => (
+                      <option key={skillData.id} value={skillData.tenSkill}>
+                        {skillData.tenSkill}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(index)}
+                    className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    -
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleAddSkill(skillsData?.[0]?.tenSkill || "")}
+                className="mt-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                + Add Skill
+              </button>
+            </div>
+
+            {/* Certifications */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Certifications
+              </label>
+              {certifications.map((cert, index) => (
+                <div key={index} className="mt-2 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={cert}
+                    onChange={(e) =>
+                      handleCertificationChange(index, e.target.value)
+                    }
+                    className="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter certification"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveCertification(index)}
+                    className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    -
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleAddCertification("")}
+                className="mt-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                + Add Certification
+              </button>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Sign Up
+            </button>
+
+            {/* Login Link */}
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-indigo-600 hover:text-indigo-800 font-medium"
+              >
+                Sign in
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
-    </>
+
+      {/* Background Image */}
+      <div className="relative hidden flex-1 lg:block">
+        <img
+          className="absolute inset-0 h-full w-full object-cover"
+          src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1908&q=80"
+          alt="Background"
+        />
+      </div>
+    </div>
   );
 }
