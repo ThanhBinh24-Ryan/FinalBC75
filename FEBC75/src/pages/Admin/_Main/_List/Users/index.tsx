@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import UpdateUserModal from "./UpdateUserModal";
 
 const PAGE_SIZE = 10;
+const MAX_VISIBLE_PAGES = 15; // Maximum number of pages to show at a time
 
 export default function UserList() {
   const { data: users, isLoading, refetch } = useGetAllUsers();
@@ -21,33 +22,25 @@ export default function UserList() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectingUser, setSelectingUser] = useState<User | null>(null);
 
-  // * add admin operation
-  const openAddModal = () => {
-    setIsAddModalOpen(true);
-  };
-
-  const closeAddModal = () => {
-    setIsAddModalOpen(false);
-  };
+  // Modal operations remain the same
+  const openAddModal = () => setIsAddModalOpen(true);
+  const closeAddModal = () => setIsAddModalOpen(false);
   const handleAddAdmin = () => {
     closeAddModal();
     refetch();
   };
 
-  // * update user operation
   const openUpdateModal = (user: User) => {
     setSelectingUser(user);
     setIsUpdateModalOpen(true);
   };
-  const closeUpdateModal = () => {
-    setIsUpdateModalOpen(false);
-  };
+  const closeUpdateModal = () => setIsUpdateModalOpen(false);
   const handleUpdateUser = () => {
     closeUpdateModal();
     refetch();
   };
 
-  // * delete user operation
+  // Delete operation remains the same
   const onSuccess = () => {
     Swal.fire({
       icon: "success",
@@ -57,7 +50,6 @@ export default function UserList() {
     refetch();
   };
   const onError = (error: any) => {
-    console.log(error);
     Swal.fire({
       icon: "error",
       title: "Failed",
@@ -82,7 +74,7 @@ export default function UserList() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-10">Loading...</div>;
   }
 
   const filteredUsers = users?.filter(
@@ -92,201 +84,236 @@ export default function UserList() {
       user.phone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.role?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const totalPages = Math.ceil((users?.length || 0) / PAGE_SIZE);
+  const totalUsers = filteredUsers?.length || 0;
+  const totalPages = Math.ceil(totalUsers / PAGE_SIZE);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+  const endIndex = Math.min(startIndex + PAGE_SIZE, totalUsers);
   const usersInCurrentPage = filteredUsers?.slice(startIndex, endIndex);
 
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  const goToPreviousPage = () =>
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const goToNextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
+  // Calculate the range of pages to display (max 15 pages)
+  const getPageRange = () => {
+    const halfVisiblePages = Math.floor(MAX_VISIBLE_PAGES / 2);
+    let startPage = Math.max(1, currentPage - halfVisiblePages);
+    let endPage = Math.min(totalPages, startPage + MAX_VISIBLE_PAGES - 1);
+
+    // Adjust startPage if endPage is at the totalPages limit
+    if (endPage - startPage + 1 < MAX_VISIBLE_PAGES) {
+      startPage = Math.max(1, endPage - MAX_VISIBLE_PAGES + 1);
+    }
+
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return {
+      pages,
+      showLeftEllipsis: startPage > 1,
+      showRightEllipsis: endPage < totalPages,
+    };
   };
 
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
+  const { pages, showLeftEllipsis, showRightEllipsis } = getPageRange();
 
   return (
-    <>
-      <div className="mb-5 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto border-b border-gray-200">
-          <div className="sm:mt-0 sm:pt-4 sm:pb-2 lg:pt-6 lg:pb-4">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+        {/* Header Section */}
+        <div className="px-6 py-6 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-800">
+              User Management
+            </h2>
             <button
-              type="button"
               onClick={openAddModal}
-              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+              className="inline-flex items-center gap-x-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-indigo-700 transition-all duration-200"
             >
-              Add new Admin or User
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add New User
             </button>
           </div>
-        </div>
-        <div>
-          <div className="mx-auto mt-4 relative rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+
+          {/* Search Bar */}
+          <div className="mt-6 relative max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
             </div>
             <input
               type="search"
-              name="search"
-              id="search"
-              className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-              placeholder="Search"
+              className="block w-full rounded-lg border border-gray-300 py-3 pl-12 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+              placeholder="Search by name, email, phone, or role..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="w-30 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      User Id
-                    </th>
-                    <th
-                      scope="col"
-                      className="w-20 py-3.5 px-8 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                    >
-                      Name & Email
-                    </th>
-                    <th
-                      scope="col"
-                      className="w-20 py-3.5 pr-16 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Birthday
-                    </th>
-                    <th
-                      scope="col"
-                      className="w-30 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Phone
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Role
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {usersInCurrentPage?.map((user: User) => (
-                    <tr key={user.email}>
-                      <td className="whitespace-nowrap py-5 text-sm text-gray-500">
-                        <div className="mt-1 text-gray-500">{user.id}</div>
-                      </td>
-                      <td className="whitespace-nowrap py-5 px-8 pl-4 text-sm sm:pl-0">
-                        <div className="flex items-center">
-                          <div className="h-11 w-11 flex-shrink-0">
-                            <img
-                              className="h-11 w-11 rounded-full"
-                              src={user.avatar}
-                              alt=""
-                            />
-                          </div>
-                          <div className="ml-4">
-                            <div className="font-medium text-gray-900">
-                              {user.name}
-                            </div>
-                            <div className="mt-1 text-gray-500">
-                              {user.email}
-                            </div>
-                          </div>
+
+        {/* Table Section */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Info
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Birthday
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {usersInCurrentPage?.map((user: User) => (
+                <tr
+                  key={user.email}
+                  className="hover:bg-gray-50 transition-colors duration-150"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src={user.avatar}
+                        alt=""
+                      />
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">
+                          {user.name}
                         </div>
-                      </td>
-                      <td className="whitespace-nowrap py-5 pr-16 text-sm text-gray-500">
-                        <div className="mt-1 text-gray-500">
-                          {user.birthday}
+                        <div className="text-sm text-gray-500">
+                          {user.email}
                         </div>
-                      </td>
-                      <td className="whitespace-nowrap py-5 text-sm text-gray-500">
-                        {user.phone}
-                      </td>
-                      <td className="whitespace-nowrap py-5 text-sm text-gray-500">
-                        {user.role?.toLowerCase() == "admin" ? (
-                          <span className="inline-flex items-center rounded-md bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
-                            {user.role}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                            {user.role}
-                          </span>
-                        )}
-                      </td>
-                      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <button
-                          className="text-indigo-600 hover:text-indigo-900"
-                          onClick={() => openUpdateModal(user)}
-                        >
-                          <Cog6ToothIcon className="h-5 w-5" />
-                        </button>
-                      </td>
-                      <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <button
-                          className="text-red-600 hover:text-red-900"
-                          onClick={() => handleDeleteUser(user.id!)}
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.birthday}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.phone}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        user.role?.toLowerCase() === "admin"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {user.role}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => openUpdateModal(user)}
+                        className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                      >
+                        <Cog6ToothIcon className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(user.id!)}
+                        className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                      >
+                        <TrashIcon className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
-          <div className="-mt-px flex w-0 flex-1">
-            <button
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1}
-              className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-            >
-              <ArrowLongLeftIcon
-                className="mr-3 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-              Previous
-            </button>
-          </div>
-          <div className="hidden md:-mt-px md:flex">
-            {Array.from({ length: totalPages }, (_, index) => (
+
+        {/* Pagination */}
+        <div className="px-6 py-4 border-t border-gray-200">
+          <nav className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-700">
+                Showing {startIndex + 1} to {endIndex} of {totalUsers} users
+              </span>
               <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
-                  currentPage === index + 1
-                    ? "border-indigo-500 text-indigo-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+                className={`inline-flex items-center gap-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                  currentPage === 1
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                {index + 1}
+                <ArrowLongLeftIcon className="h-5 w-5" />
+                Previous
               </button>
-            ))}
-          </div>
-          <div className="-mt-px flex w-0 flex-1 justify-end">
+            </div>
+            <div className="flex items-center space-x-2">
+              {showLeftEllipsis && (
+                <span className="px-3 py-1 text-sm text-gray-500">...</span>
+              )}
+              {pages.map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 rounded-md text-sm font-medium ${
+                    currentPage === page
+                      ? "bg-indigo-600 text-white"
+                      : "text-gray-500 hover:bg-gray-100"
+                  } transition-colors duration-200`}
+                >
+                  {page}
+                </button>
+              ))}
+              {showRightEllipsis && (
+                <span className="px-3 py-1 text-sm text-gray-500">...</span>
+              )}
+            </div>
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              className={`inline-flex items-center gap-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                currentPage === totalPages
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+              }`}
             >
               Next
-              <ArrowLongRightIcon
-                className="ml-3 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ArrowLongRightIcon className="h-5 w-5" />
             </button>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </div>
+
+      {/* Modals */}
       <AddAdminModal
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
@@ -298,6 +325,6 @@ export default function UserList() {
         onUpdateUser={handleUpdateUser}
         selectingUser={selectingUser!}
       />
-    </>
+    </div>
   );
 }

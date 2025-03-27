@@ -70,7 +70,6 @@ export default function Header() {
       setUserInfo(parsedData); // Đảm bảo lưu toàn bộ đối tượng
     }
   }, []);
-  
 
   const handleLogout = () => {
     // Xóa dữ liệu người dùng khỏi localStorage
@@ -147,43 +146,44 @@ export default function Header() {
           <div className="flex items-center space-x-3 mt-0 md:mt-0 ml-4">
             {isLoggedIn && userInfo ? (
               <div className="relative group flex items-center space-x-2 cursor-pointer">
-              {/* Avatar và tên người dùng */}
-              <div>
-                <img
-                  src={
-                    userInfo?.user?.avatar ||
-                    "/img/image.png  "
-                  }
-                  alt="Avatar"
-                  className="w-10 h-10 rounded-full"
-                />
-              </div>
-              <div>
-              <p className="text-sm text-gray-700 font-semibold">
-              {userInfo?.user?.name || "User"} {/* Hiển thị "No Name Available" nếu name không tồn tại */}
-  </p>
-              </div>
+                {/* Avatar và tên người dùng */}
+                <div>
+                  <img
+                    src={userInfo?.user?.avatar || "/img/image.png  "}
+                    alt="Avatar"
+                    className="w-10 h-10 rounded-full"
+                  />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {userInfo?.user?.name || "User"}{" "}
+                    {/* Hiển thị "No Name Available" nếu name không tồn tại */}
+                  </p>
+                </div>
                 {/* Dropdown menu */}
 
                 <div className="absolute top-8 right-1 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden group-hover:block z-50">
                   <button
-                   onClick={() => {
-                    if (userInfo && userInfo.user && userInfo.user.id) {
-                      console.log("Navigating to:", `/profile/${userInfo.user.id}`);
-                      navigate(`/profile/${userInfo.user.id}`); // Điều hướng đúng với ID
-                    } else {
-                      console.error("User ID không tồn tại:", userInfo);
-                    }
-                  }}
+                    onClick={() => {
+                      if (userInfo && userInfo.user && userInfo.user.id) {
+                        console.log(
+                          "Navigating to:",
+                          `/profile/${userInfo.user.id}`
+                        );
+                        navigate(`/profile/${userInfo.user.id}`); // Điều hướng đúng với ID
+                      } else {
+                        console.error("User ID không tồn tại:", userInfo);
+                      }
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Xem thông tin
+                    Profile
                   </button>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Đăng xuất
+                    Log out
                   </button>
                 </div>
               </div>
@@ -212,7 +212,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-
 
       <MenuBar />
     </>

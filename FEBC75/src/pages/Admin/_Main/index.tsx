@@ -1,6 +1,5 @@
-import React from 'react'
-import AdminNavbar from './_Navbar'
-import { Outlet } from 'react-router-dom'
+import AdminNavbar from "./_Navbar";
+import { Outlet } from "react-router-dom";
 
 export default function AdminMainPage() {
   return (
@@ -8,5 +7,5 @@ export default function AdminMainPage() {
       <AdminNavbar />
       <Outlet />
     </>
-  )
+  );
 }

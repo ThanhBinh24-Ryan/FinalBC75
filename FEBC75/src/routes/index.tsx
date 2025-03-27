@@ -1,3 +1,4 @@
+// src/routes/index.jsx
 import { Route } from "react-router-dom";
 
 import ListJob from "../pages/HomeTemplate/list-job";
@@ -14,6 +15,7 @@ import ServiceList from "../pages/Admin/_Main/_List/Services";
 import UserList from "../pages/Admin/_Main/_List/Users";
 import JobList from "../pages/Admin/_Main/_List/Jobs";
 import JobTypeList from "../pages/Admin/_Main/_List/JobTypes";
+import DashboardOverview from "../pages/Admin/_Main/DashboardOverview"; // Thêm import
 
 type TRoute = {
   path: string;
@@ -64,6 +66,10 @@ const routes: TRoute[] = [
     path: "admin",
     Component: AdminPage,
     children: [
+      {
+        path: "", // Route mặc định cho /admin
+        Component: DashboardOverview, // Hiển thị DashboardOverview
+      },
       {
         path: "services",
         Component: ServiceList,

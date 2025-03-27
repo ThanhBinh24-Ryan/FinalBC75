@@ -3,6 +3,7 @@ import FiverLogo from "../../../../assets/Fiverr_Logo_Black.png";
 import AdminAvatar from "../../../../assets/AdminAvatar.png";
 import { useUserStore } from "../../../../store/user-store";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import UpdateUserModal from "../_List/Users/UpdateUserModal";
 
 function classNames(...classes: string[]) {
@@ -16,14 +17,22 @@ export default function AdminNavbar() {
   const user = useUserStore((state) => state.user);
   const removeUser = useUserStore((state) => state.removeUser);
 
+  // Initialize useNavigate
+  const navigate = useNavigate();
+
   const openUpdateModal = () => setIsUpdateModalOpen(true);
   const closeUpdateModal = () => setIsUpdateModalOpen(false);
 
   const handleSignOut = () => {
     try {
+      // Remove user data from the store
       removeUser();
+      // Redirect to the login page
+      navigate("/login");
     } catch (error) {
       console.error("Error signing out:", error);
+      // Optionally redirect even if there's an error to ensure the user is logged out
+      navigate("/login");
     }
   };
 
@@ -74,7 +83,7 @@ export default function AdminNavbar() {
                     )}
                     onClick={handleSignOut}
                   >
-                    Sign out
+                    Log out
                   </a>
                 )}
               </MenuItem>
