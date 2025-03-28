@@ -67,9 +67,20 @@ export default function Register() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormFields>();
+  } = useForm<FormFields>({
+    defaultValues: {
+      role: "USER",
+      gender: true,
+    },
+  });
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
+    // Kiểm tra passwords match
+    if (data.password !== data.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     const updatedData = {
       ...data,
       skill: skills,
@@ -142,9 +153,7 @@ export default function Register() {
               <div className="relative mt-1">
                 <ShieldExclamationIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
                 <input
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
+                  {...register("password")}
                   type="password"
                   id="password"
                   required
@@ -152,11 +161,6 @@ export default function Register() {
                   placeholder="Enter your password"
                 />
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
 
             {/* Confirm Password */}
@@ -170,10 +174,7 @@ export default function Register() {
               <div className="relative mt-1">
                 <ShieldCheckIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
                 <input
-                  {...register("confirmPassword", {
-                    validate: (value) =>
-                      value === watch("password") || "Passwords do not match",
-                  })}
+                  {...register("confirmPassword")}
                   type="password"
                   id="confirm-password"
                   required
@@ -203,7 +204,7 @@ export default function Register() {
                 <div className="relative mt-1">
                   <UserCircleIcon className="absolute left-3 top-1/2 h-5 w-5 text-gray-400 transform -translate-y-1/2" />
                   <input
-                    {...register("name", { required: "Full name is required" })}
+                    {...register("name")}
                     type="text"
                     id="name"
                     required
@@ -211,11 +212,6 @@ export default function Register() {
                     placeholder="Enter your full name"
                   />
                 </div>
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.name.message}
-                  </p>
-                )}
               </div>
               <div>
                 <label
@@ -227,6 +223,7 @@ export default function Register() {
                 <select
                   {...register("gender")}
                   id="gender"
+                  required
                   className="mt-1 block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   defaultValue="true"
                 >
@@ -252,9 +249,7 @@ export default function Register() {
                     <option>EU</option>
                   </select>
                   <input
-                    {...register("phone", {
-                      required: "Phone number is required",
-                    })}
+                    {...register("phone")}
                     type="text"
                     id="phone-number"
                     required
@@ -262,11 +257,6 @@ export default function Register() {
                     placeholder="Enter your phone number"
                   />
                 </div>
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.phone.message}
-                  </p>
-                )}
               </div>
               <div>
                 <label
@@ -276,9 +266,7 @@ export default function Register() {
                   Birthday
                 </label>
                 <input
-                  {...register("birthday", {
-                    required: "Birthday is required",
-                  })}
+                  {...register("birthday")}
                   type="date"
                   id="birthday"
                   required
@@ -364,6 +352,43 @@ export default function Register() {
             >
               Sign Up
             </button>
+
+            {/* Social Sign Up Buttons */}
+            <div className="space-y-4">
+              <button
+                type="button"
+                className="w-full py-2 px-4 rounded-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 flex items-center justify-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="white"
+                    d="M12.24 10.32v3.26h5.12c-.21 1.1-.85 2.03-1.81 2.66 1.06.62 1.81 1.73 1.81 3.03 0 1.93-1.56 3.49-3.49 3.49-1.63 0-3-.98-3.38-2.36H7.76v-6.68h4.48zm-1.47 7.48c0 .81.66 1.47 1.47 1.47s1.47-.66 1.47-1.47-.66-1.47-1.47-1.47-1.47.66-1.47 1.47zm1.47-9.48c-.81 0-1.47.66-1.47 1.47s.66 1.47 1.47 1.47 1.47-.66 1.47-1.47-.66-1.47-1.47-1.47z"
+                  />
+                </svg>
+                Sign Up with Google
+              </button>
+
+              <button
+                type="button"
+                className="w-full py-2 px-4 rounded-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="white"
+                    d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24h-1.918c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z"
+                  />
+                </svg>
+                Sign Up with Facebook
+              </button>
+            </div>
 
             {/* Login Link */}
             <p className="mt-2 text-center text-sm text-gray-600">
