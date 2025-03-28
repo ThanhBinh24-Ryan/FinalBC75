@@ -15,7 +15,7 @@ import ServiceList from "../pages/Admin/_Main/_List/Services";
 import UserList from "../pages/Admin/_Main/_List/Users";
 import JobList from "../pages/Admin/_Main/_List/Jobs";
 import JobTypeList from "../pages/Admin/_Main/_List/JobTypes";
-import DashboardOverview from "../pages/Admin/_Main/DashboardOverview"; // Thêm import
+import DashboardOverview from "../pages/Admin/_Main/DashboardOverview";
 
 type TRoute = {
   path: string;

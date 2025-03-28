@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchListJob, Job } from "../components/Header/slide";
 import { AppDispatch, RootState } from "./../../../store";
 import { useNavigate } from "react-router-dom";
-import "./Sass/index.scss"; // Keep if custom SCSS is still needed
+import "./Sass/index.scss";
 
 export default function HomePage() {
   const carouselRef = useRef<HTMLDivElement>(null);

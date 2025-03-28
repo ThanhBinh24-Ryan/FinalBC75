@@ -141,6 +141,43 @@ const Login = () => {
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>
+
+            {/* Social Login Buttons */}
+            <div className="space-y-4">
+              <button
+                type="button"
+                className="w-full py-2 px-4 rounded-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 flex items-center justify-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="white"
+                    d="M12.24 10.32v3.26h5.12c-.21 1.1-.85 2.03-1.81 2.66 1.06.62 1.81 1.73 1.81 3.03 0 1.93-1.56 3.49-3.49 3.49-1.63 0-3-.98-3.38-2.36H7.76v-6.68h4.48zm-1.47 7.48c0 .81.66 1.47 1.47 1.47s1.47-.66 1.47-1.47-.66-1.47-1.47-1.47-1.47.66-1.47 1.47zm1.47-9.48c-.81 0-1.47.66-1.47 1.47s.66 1.47 1.47 1.47 1.47-.66 1.47-1.47-.66-1.47-1.47-1.47z"
+                  />
+                </svg>
+                Sign In with Google
+              </button>
+
+              <button
+                type="button"
+                className="w-full py-2 px-4 rounded-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="white"
+                    d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24h-1.918c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z"
+                  />
+                </svg>
+                Sign In with Facebook
+              </button>
+            </div>
           </form>
 
           {/* Error Message */}
